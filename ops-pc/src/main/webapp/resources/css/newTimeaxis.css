@@ -1,0 +1,336 @@
+body{
+	/* min-height:1000px; 
+	min-width: 700px; */
+	background-color: #EAEDF2;
+}
+#time-line{
+	min-height: 200px;
+	width:100%;
+	margin-top: 20px;
+}
+#line{
+    height: 100%;
+    width:4px;
+    min-height:200px;
+    background-color: #00A8FF;
+    overflow: visible;
+    margin-left: 141.5px;
+    position: relative;
+    padding-bottom: 50px;
+}
+#plan-title{
+	width:285px;
+	height:60px;
+	margin-left: 5px;
+	background:url(../images/planTag.png) transparent no-repeat;
+	text-align: center;
+	cursor: pointer;
+}
+#plan-title span{
+	margin-top:20px;
+	display:inline-block;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+#plan-start{
+	width:29px;
+	height:29px;
+	margin-left: 129px;
+	margin-top:5px;
+	background:url(../images/planStart.png) transparent 0 0 no-repeat;
+}
+#add-task{
+	/* width:20px;
+	height:20px; */
+	margin-left:-8px;
+	padding:50px 0 10px 0;
+	position: relative;
+}
+#add-task #addBtn{
+	padding:20px;
+	background:url(../images/addD.png) transparent 0 0 no-repeat;
+	display: none;
+	position: absolute;
+}
+#plan-end{
+	width:20px;
+	height:20px;
+	margin-left:-8px;
+	position:absolute;
+	bottom:-1px;
+	background:url(../images/planEnd.png) transparent 0 0 no-repeat;
+}
+
+#planDetail,#completePlanMsg{
+	position: relative;
+	width:1000px;
+	margin-left: 40px;
+	border-radius:10px;
+	display: none;
+}
+#planDetail form{
+	border-radius:10px;
+	padding-bottom: 10px;
+}
+#planDetail form p{
+	margin:3px 0px
+}
+#planDetail form p font{
+	width:110px;
+}
+#planDetail form h3{
+	font-size:16px;
+	color:#01A9FF;
+	margin-left: 20px;
+}
+#planBtn{
+	text-align: right;
+	margin-right: 45px
+}
+#planBtn input{
+	/* display: none; */
+}
+#planSouth{
+	margin-top:10px;
+	display:none;
+	background-color: #F2F2F2;
+	height: auto !important;
+	border: 1px solid #D7D7D7;
+	border-radius:10px;
+}
+#planSouth .form1{
+	padding-top:5px;
+	background-color: #F2F2F2 !important;
+}
+.closeBar{
+	border-radius:10px;
+}
+.closeBtn{
+	display:inline-block;
+	background: url("../images/close-btn.png") no-repeat;
+	width: 14px;
+	height: 16px;
+	position: relative;
+	left:870px;
+	margin-top: 5px;
+	cursor: pointer;
+}
+.layout-expand-south{
+	display: none !important;
+}
+
+#taskDetail{
+	position: relative;
+	width:1000px;
+	margin-left: 48px;
+	border-radius:10px;
+	top:-55px;
+	display: none;
+}
+#taskDetail form{
+	border-radius:10px;
+	padding-bottom: 10px;
+}
+#taskDetail form p{
+	margin:3px 0px
+}
+#taskDetail form p font{
+	width:140px;
+}
+#taskDetail form h3{
+	font-size:16px;
+	color:#01A9FF;
+	margin-left: 20px;
+}
+input[type="checkbox"]{
+	vertical-align: middle;
+}
+#taskBtn{
+	text-align: right;
+	margin-right: 45px
+}
+#taskBtn input{
+	/* display: none; */
+}
+#taskSouth{
+	background-color: #F2F2F2;
+}
+#task-list{
+	width: 1000px;
+	margin-left: 40px; 
+	border-radius:10px;
+	/* margin-bottom: 50px; */
+	display: none;
+}
+.list-node{
+	display:inline-block;
+	width:90px;
+	height:20px;
+	background:url(../images/planEnd.png) transparent 50px 0px no-repeat;
+	position: absolute;
+	left: -58px;
+	font-size: 12px;
+	line-height: 20px;
+}
+
+#ganttDetail{
+	width:1000px;
+	border: 1px solid #D7D7D7;
+	background-color: white;
+	position: absolute;
+	left: 41px;
+	display: none;
+	z-index: 3
+}
+#ganttDetail form p{
+	margin:3px 0px
+}
+#ganttDetail form p font{
+	width:140px;
+}
+
+#attachText,#attachText_plan,#attachText_task{
+	width:640px;
+	height:60px;
+	background-color: white;
+	display: inline-block;
+	/* border: 1px solid #D7D7D7; */
+	vertical-align: text-top;
+	overflow: auto;
+}
+
+#addAttach,#addAttach_plan,#addAttach_task{
+	width:20px;
+	height:20px;
+	display:inline-block;
+	cursor: pointer;
+	background:url("../images/add_on.png");
+	margin:2px 5px;
+	border: 1px solid #D7D7D7;
+	vertical-align: top;
+}
+
+.attachName,.attachName_plan,.attachName_task{
+	width:80px;
+	height:19px;
+	border: 1px solid #D7D7D7;
+	border-right:none;
+	text-align: center;
+	margin:2px 0 2px 5px
+}
+.delAttach,.delAttach_plan,.delAttach_task{
+	margin:2px 5px 2px 0;
+	height:21px;
+	border: 1px solid #D7D7D7;
+	border-left:none;
+	display: inline-block;
+	cursor: pointer;
+}
+
+#rank-plan,#rank-task{
+	display: inline;
+}
+
+#btnDiv{
+	width:auto;
+	height:auto;
+	position: absolute;
+	top:20px;
+	left:300px;
+	/* display: none; */
+}
+
+#costAnalysis,#flowAnalysis,#stockDelivery,#zjjh{ 
+	width:100px;
+	height:30px;
+	background-color: #74D4FA;
+	color:white;
+	border:none;
+	border-radius:3px;
+	font-size:14px;
+	font-weight: bold;
+	cursor:pointer	
+}
+
+#rateBox{
+	width:auto;
+	height:auto;
+	position: absolute;
+	top:20px;
+	left:710px;
+	display: none;
+}
+
+#nowRate{
+	width:130px;
+	height:54px;
+	padding-left:54px;
+	background:url("../images/nowRate.png") no-repeat;
+	text-align:center;
+	display:inline-block;
+	margin-right: 20px
+}
+
+#nowRate .text{
+	font-size: 15px;
+	font-weight: bolder;
+	color: #B0B0B0;
+}
+
+#nowRate .rate{
+	font-size: 31px;
+	font-weight: bolder;
+	color: #E9BD5C;
+}
+
+#norRate{
+	width:140px;
+	height:54px;
+	padding-left:54px;
+	background:url("../images/norRate.png") no-repeat;
+	text-align:center;
+	display:inline-block;
+}
+
+#norRate .text{
+	font-size: 15px;
+	font-weight: bolder;
+	color: #B0B0B0
+}
+
+#norRate .rate{
+	font-size: 31px;
+	font-weight: bolder;
+	color: #63C72F
+}
+/* #left-head{
+	position:absolute;
+} */
+#right-head{
+	/* position:absolute; */
+	z-index: 2
+}
+.status-icon {
+	margin-left:-10px;
+}
+.icon0{
+	background:url("../images/icon_draft.png") 0px 8px no-repeat;
+}
+.icon1{
+	background:url("../images/icon_handling.png") 0px 8px no-repeat;
+}
+.icon2{
+	background:url("../images/icon_handle.png") 0px 8px no-repeat;
+}
+.icon3{
+	background:url("../images/icon_finish.png") 0px 8px no-repeat;
+}
+.icon4{
+	background:url("../images/icon_delay.png") 0px 8px no-repeat;
+}
+.icon5{
+	background:url("../images/icon_delay.png") 0px 8px no-repeat;
+}
+.icon6{
+	background:url("../images/icon_end.png") 0px 8px no-repeat;
+}

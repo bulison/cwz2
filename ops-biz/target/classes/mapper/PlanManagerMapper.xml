@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.domain.flow.dao.PlanManagerDao">
+
+    <select id="queryPlanTransportFee" resultType="cn.fooltech.fool_ops.domain.flow.vo.PlanTransportFeeVo">
+        SELECT
+            g.FBILL_DATE as billDate,
+            ad1.FNAME as deliveryPlace,
+            ad2.FNAME as receiptPlace,
+            at1.FNAME as transportType,
+            at2.FNAME as shippingType,
+            s.FNAME as supplier,
+            gd.FNAME as goodsName,
+            sp.FNAME as goodsSpec,
+            at5.FNAME as transportUnit,
+            d.FCONVERSION_RATE as conversionRate,
+            g.FFACTORY_PRICE as factoryPrice,
+            g.FFACTORY_PRICE as taxPrice,
+            g.FTOTAL_PRICE as totalFee,
+            d.FBASE_PRICE as freightPrice,
+            d.FTRANSPORT_BILL_ID as feeId,
+            d.FEXPECTED_DAYS as expectDay,
+            d.FREMARK as remark
+        FROM tflow_plan_goods_detail d
+        LEFT JOIN tflow_plan_goods g on g.FID = d.FBILL_ID
+        LEFT JOIN tbd_supplier s on s.FID = d.FSUPPLIER_ID
+        LEFT JOIN tbd_freight_address ad1 on ad1.FID = d.FDELIVERY_PLACE
+        LEFT JOIN tbd_freight_address ad2 on ad2.FID = d.FRECEIPT_PLACE
+        LEFT JOIN tbd_auxiliary_attr at1 on at1.FID = d.FTRANSPORT_TYPE_ID
+        LEFT JOIN tbd_auxiliary_attr at2 on at2.FID = d.FSHIPMENT_TYPE_ID
+        LEFT JOIN tbd_auxiliary_attr at5 on at5.FID = d.FTRANSPORT_UNIT_ID
+        LEFT JOIN tbd_goods gd on gd.FID = g.FGOODS_ID
+        LEFT JOIN tbd_good_spec sp on sp.FID = g.FGOODS_SPEC_ID
+        where 1=1
+        <if test="planId != null and planId != ''">
+            AND g.FPLAN_ID = #{planId}
+        </if>
+        <if test="deliveryPlace != null and deliveryPlace != ''">
+            AND g.FDELIVERY_PLACE = #{deliveryPlace}
+        </if>
+        <if test="receiptPlace != null and receiptPlace != ''">
+            AND g.FRECEIPT_PLACE = #{receiptPlace}
+        </if>
+        <if test="goodsId != null and goodsId != ''">
+            AND g.FGOODS_ID = #{goodsId}
+        </if>
+        <if test="goodsSpecId != null and goodsSpecId != ''">
+            AND g.FGOODS_SPEC_ID = #{goodsSpecId}
+        </if>
+    </select>
+
+    <select id="queryFeeByTransportBillId" resultType="cn.fooltech.fool_ops.domain.flow.vo.TransportFeeDetailVo">
+        SELECT
+          attr.FID as feeId,
+          attr.FNAME as feeName,
+          SUM(d.FAMOUNT) as amount
+        FROM tsb_transport_price_detail2 d
+        LEFT JOIN tbd_auxiliary_attr attr on d.FTRANSPORT_COST_ID=attr.FID
+        WHERE d.FBILL_ID = #{billId}
+        GROUP BY d.FTRANSPORT_COST_ID
+    </select>
+</mapper>

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: ops-biz
+Implementation-Version: 0.0.2
+Built-By: JAVA
+Implementation-Vendor-Id: cn.fooltech
+Build-Jdk: 1.8.0_92
+Implementation-URL: http://projects.spring.io/spring-boot/ops-parent/o
+ ps-biz/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

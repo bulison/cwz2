@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.analysis.dao.TransportPriceDao">
+    <resultMap id="TransportPriceResultMap" type="cn.fooltech.fool_ops.analysis.vo.TransportPriceVo">
+        <id column="FID" property="id"/>
+        <result column="FCODE" property="code"/>
+        <result column="FBILL_DATE" property="billDate"/>
+        <result column="FSUPPLIER_ID" property="supplierId"/>
+        <result column="FDELIVERY_PLACE" property="deliveryPlace"/>
+        <result column="FRECEIPT_PLACE" property="receiptPlace"/>
+        <result column="FTRANSPORT_TYPE_ID" property="transportTypeId"/>
+        <result column="FSHIPMENT_TYPE_ID" property="shipmentTypeId"/>
+        <result column="FEFFECTIVE_DATE" property="effectiveDate"/>
+        <result column="FAMOUNT" property="amount"/>
+        <result column="FEXECUTE_SIGN" property="executeSign"/>
+        <result column="FEXPECTED_DAYS" property="expectedDays"/>
+        <result column="FDESCRIBE" property="describe"/>
+        <result column="FENABLE" property="enable"/>
+        <result column="FCREATE_TIME" property="createTime"/>
+        <result column="FCREATOR_ID" property="creatorId"/>
+        <result column="FUPDATE_TIME" property="updateTime"/>
+        <result column="FORG_ID" property="orgId"/>
+        <result column="FACC_ID" property="accId"/>
+
+    </resultMap>
+
+    <update id="invalideByEffectiveDate">
+        <![CDATA[
+
+         UPDATE tsb_transport_price a
+         SET  a.FENABLE=0
+         WHERE DATE(FEFFECTIVE_DATE) < CURDATE()
+         and FENABLE=1
+
+        ]]>
+    </update>
+
+    <select id="selectValidTransportPrice" resultMap="TransportPriceResultMap">
+        <![CDATA[
+select FID,
+  FCODE,
+  FBILL_DATE,
+  FSUPPLIER_ID,
+  FDELIVERY_PLACE,
+  FRECEIPT_PLACE,
+  FTRANSPORT_TYPE_ID,
+  FSHIPMENT_TYPE_ID,
+  FEFFECTIVE_DATE,
+  FAMOUNT,
+  FEXECUTE_SIGN,
+  FEXPECTED_DAYS,
+  FDESCRIBE,
+  FENABLE,
+  FCREATE_TIME,
+  FCREATOR_ID,
+  FUPDATE_TIME,
+  FORG_ID,
+  FACC_ID 
+ from (
+SELECT  DISTINCT(concat(FDELIVERY_PLACE,FDELIVERY_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID)) as temporder,
+  FID,
+  FCODE,
+  FBILL_DATE,
+  FSUPPLIER_ID,
+  FDELIVERY_PLACE,
+  FRECEIPT_PLACE,
+  FTRANSPORT_TYPE_ID,
+  FSHIPMENT_TYPE_ID,
+  FEFFECTIVE_DATE,
+  FAMOUNT,
+  FEXECUTE_SIGN,
+  FEXPECTED_DAYS,
+  FDESCRIBE,
+  FENABLE,
+  FCREATE_TIME,
+  FCREATOR_ID,
+  FUPDATE_TIME,
+  FORG_ID,
+  FACC_ID 
+        FROM TSB_TRANSPORT_PRICE a
+        WHERE
+         FEXECUTE_SIGN!=3
+        AND FENABLE=1
+		AND (FEFFECTIVE_DATE) >NOW()
+and FDELIVERY_PLACE =(select FID from tbd_freight_address b where   enable='1' and fid=a.FDELIVERY_PLACE )
+and FRECEIPT_PLACE =(select FID from tbd_freight_address b where   enable='1' and fid=a.FRECEIPT_PLACE )
+      AND FCREATOR_ID IN (SELECT FID FROM SMG_TUSER WHERE  FVALID_PRICE ='1')
+        ORDER BY FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,
+        FEXECUTE_SIGN ASC ,FBILL_DATE DESC ,FUPDATE_TIME DESC
+)b order by temporder,fid
+
+
+
+
+
+
+
+
+
+        ]]>
+
+    </select>
+
+
+</mapper>

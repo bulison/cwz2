@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.analysis.dao.TransportRoute4Dao">
+
+
+    <resultMap id="TransportRouteResultMap" type="cn.fooltech.fool_ops.analysis.vo.TransportRouteVo">
+        <id column="FID" property="id"/>
+        <result column="FTRANSPORT_BILL_ID" property="transportBillId"/>
+        <result column="FROUTE" property="route"/>
+        <result column="FDELIVERY_PLACE" property="deliveryPlace"/>
+        <result column="FRECEIPT_PLACE" property="receiptPlace"/>
+        <result column="FTRANSPORT_TYPE_ID" property="transportTypeId"/>
+        <result column="FSHIPMENT_TYPE_ID" property="shipmentTypeId"/>
+        <result column="FCREATE_TIME" property="createTime"/>
+        <result column="FCREATOR_ID" property="creatorId"/>
+        <result column="FUPDATE_TIME" property="updateTime"/>
+        <result column="FORG_ID" property="orgId"/>
+        <result column="FACC_ID" property="accId"/>
+
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        FID,FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID
+    </sql>
+    <delete id="deleteAll">
+        delete from TSB_TRANSPORT_ROUTE
+    </delete>
+
+    <update id="createTemporaryRouteTable" parameterType="int">
+        <![CDATA[
+        CREATE  temporary  TABLE temp_transport_route (
+  FID varchar(32) NOT NULL ,
+  FTRANSPORT_BILL_ID varchar(32) ,
+  FROUTE varchar(6000) ,
+  FDELIVERY_PLACE varchar(32) ,
+  FRECEIPT_PLACE varchar(32)  ,
+  FTRANSPORT_TYPE_ID varchar(32) ,
+  FSHIPMENT_TYPE_ID varchar(32)  ,
+  FCREATE_TIME datetime ,
+  FCREATOR_ID varchar(32) ,
+  FUPDATE_TIME timestamp ,
+  FORG_ID varchar(32) ,
+  FACC_ID varchar(32)
+) 
+      ]]>
+    </update>
+    <delete id="deleteTemporaryRouteTable" >
+       DELETE FROM temp_transport_route WHERE 1=1
+    </delete>
+
+    <update id="dropTemporaryRouteTable" >
+         DROP TABLE temp_transport_route
+    </update>
+  
+
+
+
+    <insert id="insertTempTable" parameterType="cn.fooltech.fool_ops.analysis.vo.TransportRouteVo">
+         insert into
+        temp_transport_route (FID,FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID)
+        values
+        ( REPLACE(UUID(), '-', ''),#{transportBillId},#{route},#{deliveryPlace},#{receiptPlace},#{transportTypeId},#{shipmentTypeId},#{createTime},#{creatorId},#{updateTime},#{orgId},#{accId})
+     </insert>
+
+    <insert id="insertTempTableBatch" parameterType="java.util.List">
+        <![CDATA[
+        insert into
+        temp_transport_route (FID,FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID)
+        values
+            ]]>
+        <foreach collection="list" item="item" index="index" separator="," >
+            <![CDATA[
+            ( REPLACE(UUID(), '-', ''),#{item.transportBillId},#{item.route},#{item.deliveryPlace},#{item.receiptPlace},#{item.transportTypeId},#{item.shipmentTypeId},#{item.createTime},#{item.creatorId},#{item.updateTime},#{item.orgId},#{item.accId})
+            ]]>
+        </foreach>
+    </insert>
+
+
+    <select id="isExistRouteRule1" resultType="int" parameterType="java.lang.String">
+        <![CDATA[
+          SELECT COUNT(*) FROM TSB_TRANSPORT_ROUTE A,TSB_TRANSPORT_PRICE B
+    WHERE A.FDELIVERY_PLACE=B.FDELIVERY_PLACE
+    AND A.FRECEIPT_PLACE=B.FRECEIPT_PLACE
+    AND A.FTRANSPORT_TYPE_ID=B.FTRANSPORT_TYPE_ID
+    AND A.FSHIPMENT_TYPE_ID=B.FSHIPMENT_TYPE_ID
+    AND  B .FID=#{value}
+        ]]>
+    </select>
+
+
+
+    <select id="selectAllTemporaryRoute" resultMap="TransportRouteResultMap">
+
+    SELECT
+      FID,
+    FTRANSPORT_BILL_ID,
+    FROUTE,
+    FDELIVERY_PLACE,
+    FRECEIPT_PLACE,
+    FTRANSPORT_TYPE_ID,
+    FSHIPMENT_TYPE_ID,
+    FCREATE_TIME,
+    FCREATOR_ID,
+    FUPDATE_TIME,
+    FORG_ID,
+    FACC_ID
+  FROM (
+    SELECT
+    DISTINCT(concat(FDELIVERY_PLACE,FDELIVERY_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FROUTE)) as temporder,
+    FID,
+    FTRANSPORT_BILL_ID,
+    FROUTE,
+    FDELIVERY_PLACE,
+    FRECEIPT_PLACE,
+    FTRANSPORT_TYPE_ID,
+    FSHIPMENT_TYPE_ID,
+    FCREATE_TIME,
+    FCREATOR_ID,
+    FUPDATE_TIME,
+    FORG_ID,
+    FACC_ID
+    FROM
+        temp_transport_route A
+   ORDER BY temporder
+)d
+    </select>
+
+    <insert id="insertTransportRouteBatch" parameterType="java.util.List">
+        <![CDATA[
+        insert into
+        TSB_TRANSPORT_ROUTE (FID,FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID)
+        values
+            ]]>
+        <foreach collection="list" item="item" index="index" separator="," >
+            <![CDATA[
+            ( REPLACE(UUID(), '-', ''),#{item.transportBillId},#{item.route},#{item.deliveryPlace},#{item.receiptPlace},#{item.transportTypeId},#{item.shipmentTypeId},#{item.createTime},#{item.creatorId},#{item.updateTime},#{item.orgId},#{item.accId})
+            ]]>
+        </foreach>
+    </insert>
+
+
+    <select id="getRouteListByRule2" resultMap="TransportRouteResultMap">
+        <![CDATA[
+      SELECT   FID,
+    FTRANSPORT_BILL_ID,
+    FROUTE,
+    FDELIVERY_PLACE,
+    FRECEIPT_PLACE,
+    FTRANSPORT_TYPE_ID,
+    FSHIPMENT_TYPE_ID,
+    FCREATE_TIME,
+    FCREATOR_ID,
+    FUPDATE_TIME,
+    FORG_ID,
+    FACC_ID
+  FROM (
+    SELECT
+    DISTINCT(concat(FDELIVERY_PLACE,FDELIVERY_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FROUTE)) as temporder,
+    REPLACE(UUID(), '-', '') as FID,
+    NULL as FTRANSPORT_BILL_ID,
+    CONCAT(FROUTE,'","','{"de":"',IFNULL(#{deliveryPlace},''),'",  "sh":"',IFNULL(#{shipmentTypeId},''),'",  "tr":"',IFNULL(#{transportTypeId},''),'",  "re":"',IFNULL(#{receiptPlace},''),'"}') as FROUTE ,
+    #{deliveryPlace} as FDELIVERY_PLACE,
+    FRECEIPT_PLACE ,
+    NULL as FTRANSPORT_TYPE_ID ,
+    NULL as FSHIPMENT_TYPE_ID,
+    NOW() as FCREATE_TIME ,
+    #{creatorId} as FCREATOR_ID ,
+    NOW() as FUPDATE_TIME ,
+    #{orgId} as  FORG_ID,
+    #{faccId} as FACC_ID
+    FROM
+        TSB_TRANSPORT_ROUTE A
+        WHERE
+     A.FRECEIPT_PLACE = #{deliveryPlace}
+    AND FROUTE NOT LIKE CONCAT('%',#{receiptPlace} , '%')
+   ORDER BY temporder,fid,FCREATE_TIME
+)d  ORDER BY fid
+
+
+        ]]>
+    </select>
+
+
+
+
+    <select id="getRouteListByRule3" resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+        SELECT
+        FID,
+        FTRANSPORT_BILL_ID,
+        FROUTE,
+        FDELIVERY_PLACE,
+        FRECEIPT_PLACE,
+        FTRANSPORT_TYPE_ID,
+        FSHIPMENT_TYPE_ID,
+        FCREATE_TIME,
+        FCREATOR_ID,
+        FUPDATE_TIME,
+        FORG_ID,
+        FACC_ID
+        FROM (
+        SELECT
+        DISTINCT(concat(FDELIVERY_PLACE,FDELIVERY_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FROUTE)) as temporder,
+        REPLACE(UUID(), '-', '') as FID,
+        NULL as FTRANSPORT_BILL_ID,
+        CONCAT('{"de":"',IFNULL(#{deliveryPlace},''),'",  "sh":"',IFNULL(#{shipmentTypeId},''),'",  "tr":"',IFNULL(#{transportTypeId},''),'",  "re":"',IFNULL(#{receiptPlace},''),'"}','","',FROUTE) as FROUTE ,
+        #{deliveryPlace} as FDELIVERY_PLACE,
+        FRECEIPT_PLACE ,
+        NULL as FTRANSPORT_TYPE_ID ,
+        NULL as FSHIPMENT_TYPE_ID,
+        NOW() as FCREATE_TIME ,
+        #{creatorId} as FCREATOR_ID ,
+        NOW() as FUPDATE_TIME ,
+        #{orgId} as  FORG_ID,
+        #{faccId} as FACC_ID
+        FROM
+        TSB_TRANSPORT_ROUTE A
+        WHERE FDELIVERY_PLACE = #{receiptPlace}
+        AND FROUTE NOT LIKE CONCAT('%',#{deliveryPlace} , '%')
+        ORDER BY temporder,fid,FCREATE_TIME
+        )d  ORDER BY fid
+                ]]>
+    </select>
+
+
+    <select id="getRouteListByRule4" resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+        SELECT
+        FID,
+        FTRANSPORT_BILL_ID,
+        FROUTE,
+        FDELIVERY_PLACE,
+        FRECEIPT_PLACE,
+        FTRANSPORT_TYPE_ID,
+        FSHIPMENT_TYPE_ID,
+        FCREATE_TIME,
+        FCREATOR_ID,
+        FUPDATE_TIME,
+        FORG_ID,
+        FACC_ID
+        FROM (
+        SELECT
+        DISTINCT(concat(A.FDELIVERY_PLACE,A.FDELIVERY_PLACE,A.FTRANSPORT_TYPE_ID,A.FSHIPMENT_TYPE_ID,A.FROUTE)) as temporder,
+        REPLACE(UUID(), '-', '') as FID,
+        NULL as FTRANSPORT_BILL_ID,
+        CONCAT(A.FROUTE,'","','{"de":"',IFNULL(#{deliveryPlace},''),'",  "sh":"',IFNULL(#{shipmentTypeId},''),'",  "tr":"',IFNULL(#{transportTypeId},''),'",  "re":"',IFNULL(#{receiptPlace},''),'"}') as FROUTE ,
+        #{deliveryPlace} as FDELIVERY_PLACE,
+        A.FRECEIPT_PLACE ,
+        NULL as FTRANSPORT_TYPE_ID ,
+        NULL as FSHIPMENT_TYPE_ID,
+        NOW() as FCREATE_TIME ,
+        #{creatorId} as FCREATOR_ID ,
+        NOW() as FUPDATE_TIME ,
+        #{orgId} as  FORG_ID,
+        #{faccId} as FACC_ID
+        FROM
+           TSB_TRANSPORT_ROUTE A , TBD_FREIGHT_ADDRESS B
+      WHERE A.FRECEIPT_PLACE=B.FPARENT_ID
+      and b.fid=#{deliveryPlace}
+          AND a.FROUTE NOT LIKE CONCAT('%',#{receiptPlace} , '%')
+      AND B.ENABLE='1'
+        ORDER BY TEMPORDER,A.FID desc ,b.fid desc,a.FCREATE_TIME,b.FCREATE_TIME
+        )d  ORDER BY fid
+                ]]>
+    </select>
+
+
+    <select id="getRouteListByRule5" resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+        SELECT
+        FID,
+        FTRANSPORT_BILL_ID,
+        FROUTE,
+        FDELIVERY_PLACE,
+        FRECEIPT_PLACE,
+        FTRANSPORT_TYPE_ID,
+        FSHIPMENT_TYPE_ID,
+        FCREATE_TIME,
+        FCREATOR_ID,
+        FUPDATE_TIME,
+        FORG_ID,
+        FACC_ID
+        FROM (
+        SELECT
+        DISTINCT(concat(FDELIVERY_PLACE,FDELIVERY_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FROUTE)) as temporder,
+        REPLACE(UUID(), '-', '') as FID,
+        NULL as FTRANSPORT_BILL_ID,
+        CONCAT('{"de":"',IFNULL(#{deliveryPlace},''),'",  "sh":"',IFNULL(#{shipmentTypeId},''),'",  "tr":"',IFNULL(#{transportTypeId},''),'",  "re":"',IFNULL(#{receiptPlace},''),'"}','","',FROUTE) as FROUTE ,
+        #{deliveryPlace} as FDELIVERY_PLACE,
+        FRECEIPT_PLACE ,
+        NULL as FTRANSPORT_TYPE_ID ,
+        NULL as FSHIPMENT_TYPE_ID,
+        NOW() as FCREATE_TIME ,
+        #{creatorId} as FCREATOR_ID ,
+        NOW() as FUPDATE_TIME ,
+        #{orgId} as  FORG_ID,
+        #{faccId} as FACC_ID
+        FROM
+        TSB_TRANSPORT_ROUTE A , TBD_FREIGHT_ADDRESS B
+        WHERE A.FDELIVERY_PLACE=B.FPARENT_ID
+        and b.fid=#{receiptPlace}
+        AND a.FROUTE NOT LIKE CONCAT('%',#{deliveryPlace} , '%')
+        AND B.ENABLE='1'
+          ORDER BY TEMPORDER,A.FID desc ,b.fid desc,a.FCREATE_TIME,b.FCREATE_TIME
+        )d  ORDER BY fid
+                ]]>
+    </select>
+
+
+
+    <select id="getRouteListByRule6" resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+        SELECT
+        FID,
+        FTRANSPORT_BILL_ID,
+        FROUTE,
+        FDELIVERY_PLACE,
+        FRECEIPT_PLACE,
+        FTRANSPORT_TYPE_ID,
+        FSHIPMENT_TYPE_ID,
+        FCREATE_TIME,
+        FCREATOR_ID,
+        FUPDATE_TIME,
+        FORG_ID,
+        FACC_ID
+        FROM (
+        SELECT
+        DISTINCT(concat(FDELIVERY_PLACE,FDELIVERY_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FROUTE)) as temporder,
+        REPLACE(UUID(), '-', '') as FID,
+        NULL as FTRANSPORT_BILL_ID,
+        CONCAT(FROUTE,'","','{"de":"',IFNULL(#{deliveryPlace},''),'",  "sh":"',IFNULL(#{shipmentTypeId},''),'",  "tr":"',IFNULL(#{transportTypeId},''),'",  "re":"',IFNULL(#{receiptPlace},''),'"}') as FROUTE ,
+        #{deliveryPlace} as FDELIVERY_PLACE,
+        FRECEIPT_PLACE ,
+        NULL as FTRANSPORT_TYPE_ID ,
+        NULL as FSHIPMENT_TYPE_ID,
+        NOW() as FCREATE_TIME ,
+        #{creatorId} as FCREATOR_ID ,
+        NOW() as FUPDATE_TIME ,
+        #{orgId} as  FORG_ID,
+        #{faccId} as FACC_ID
+        FROM
+        TSB_TRANSPORT_ROUTE A , TBD_FREIGHT_ADDRESS B
+        WHERE A.FDELIVERY_PLACE=B.FPARENT_ID
+        and b.fid=#{receiptPlace}
+        AND a.FROUTE NOT LIKE CONCAT('%',#{receiptPlace} , '%')
+        AND B.ENABLE='1'
+         ORDER BY TEMPORDER,A.FID desc ,b.fid desc,a.FCREATE_TIME,b.FCREATE_TIME
+        )d  ORDER BY fid
+                ]]>
+    </select>
+
+
+    <select id="getRouteListByRule7" resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+          SELECT
+        FID,
+        FTRANSPORT_BILL_ID,
+        FROUTE,
+        FDELIVERY_PLACE,
+        FRECEIPT_PLACE,
+        FTRANSPORT_TYPE_ID,
+        FSHIPMENT_TYPE_ID,
+        FCREATE_TIME,
+        FCREATOR_ID,
+        FUPDATE_TIME,
+        FORG_ID,
+        FACC_ID
+        FROM (
+        SELECT
+        DISTINCT(concat(FDELIVERY_PLACE,FDELIVERY_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FROUTE)) as temporder,
+        REPLACE(UUID(), '-', '') as FID,
+        NULL as FTRANSPORT_BILL_ID,
+        CONCAT(FROUTE,'","','{"de":"',IFNULL(#{deliveryPlace},''),'",  "sh":"',IFNULL(#{shipmentTypeId},''),'",  "tr":"',IFNULL(#{transportTypeId},''),'",  "re":"',IFNULL(#{receiptPlace},''),'"}') as FROUTE ,
+        #{deliveryPlace} as FDELIVERY_PLACE,
+        FRECEIPT_PLACE ,
+        NULL as FTRANSPORT_TYPE_ID ,
+        NULL as FSHIPMENT_TYPE_ID,
+        NOW() as FCREATE_TIME ,
+        #{creatorId} as FCREATOR_ID ,
+        NOW() as FUPDATE_TIME ,
+        #{orgId} as  FORG_ID,
+        #{faccId} as FACC_ID
+        FROM
+        TSB_TRANSPORT_ROUTE A , TBD_FREIGHT_ADDRESS B
+        WHERE A.FRECEIPT_PLACE=B.FPARENT_ID
+        and b.fid=#{deliveryPlace}
+        AND a.FROUTE NOT LIKE CONCAT('%',#{deliveryPlace} , '%')
+        AND B.ENABLE='1'
+             ORDER BY TEMPORDER,A.FID desc ,b.fid desc,a.FCREATE_TIME,b.FCREATE_TIME
+        )d  ORDER BY fid
+                ]]>
+    </select>
+</mapper>

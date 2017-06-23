@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.eureka.rateService.dao.CustomerIncomeAnalysisDao">
+    <resultMap id="customerIncomeAnalysisResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.CustomerIncomeAnalysisVo">
+        <result column="FCUSTOMER_ID" property="customerId"/>
+        <result column="FCODE" property="code"/>
+        <result column="FNAME" property="name"/>
+        <result column="FAREA" property="area"/>
+        <result column="FCATEGORY" property="category"/>
+        <result column="FSALES_AMOUNT" property="salesAmount"/>
+        <result column="FGOODS_COST" property="goodsCost"/>
+        <result column="FCOST" property="cost"/>
+        <result column="FPROFIT" property="profit"/>
+        <result column="FCURRENT_DEBT" property="currentDebt"/>
+        <result column="FCREDIT" property="credit"/>
+        <result column="FPERCENTAGE_AMOUNT" property="percentageAmount"/>
+    </resultMap>
+    <resultMap id="wareHouseBillAndPlanDetail" type="cn.fooltech.fool_ops.eureka.rateService.vo.WarehouseBillTemVo">
+    	 <id column="fid" property="fid"/>
+     	 <result column="totalAmount" property="totalAmount"/>
+     	 <result column="freeAmount" property="freeAmount"/>
+      	 <result column="totalPayAmount" property="totalPayAmount"/>
+         <result column="billDate" property="billDate"/>
+         <result column="code" property="code"/>
+          	<collection property="planDetailList" ofType="cn.fooltech.fool_ops.eureka.rateService.vo.CapitalPlanDetailTemVo">  
+          	<id column="tid" property="fid"/>
+          	 <result column="paymentDate" property="paymentDate"/>  
+          	 <result column="orgPaymentDate" property="orgPaymentDate"/>  
+          	<result column="planAmount" property="planAmount"/>  
+          	<result column="billAmount" property="billAmount"/>  
+          	<result column="paymentAmount" property="paymentAmount"/>  
+          	</collection>
+    </resultMap>
+    <select id="customerIncomeAnalysisProcessing" resultMap="customerIncomeAnalysisResultMap">
+        CALL customer_Income_Analysis(#{endDay},#{startDay},#{orgId},#{accId},#{customerId},#{category},#{area},#{page},#{rows});
+    </select>
+   <select id="findWarehouseBillByCustomerId" resultMap="wareHouseBillAndPlanDetail">
+	select
+	w.fid,
+	w.ftotal_amount AS totalAmount,
+	w.ffree_Amount AS freeAmount,
+	w.ftotal_pay_amount AS totalPayAmount,
+	w.FBILL_DATE AS billDate,
+	w.FCODE AS code,
+	t.FID AS tid,
+    t.FPAYMENT_DATE as paymentDate,
+    t.FORG_PAYMENT_DATE	as orgPaymentDate,
+	t.FPLAN_AMOUNT as planAmount,
+	t.FBILL_AMOUNT as billAmount,
+	t.FPAYMENT_AMOUNT as paymentAmount
+FROM
+	tsb_warehouse_bill W
+left join tcapital_plan_detail t ON t.FRELATION_ID=w.FID
+WHERE
+	(
+		w.FTOTAL_AMOUNT = w.FFREE_AMOUNT + w.FTOTAL_PAY_AMOUNT
+	)	
+AND w.FBILL_TYPE = 41
+AND w.FTOTAL_AMOUNT != 0
+AND w.FCUSTOMER_ID = #{customerId}
+and w.Facc_Id=#{accId}
+	 </select>
+	 <select id="findWarehouseBillById" resultMap="wareHouseBillAndPlanDetail">
+	 SELECT
+	w.fid,
+	w.ftotal_amount AS totalAmount,
+	w.ffree_Amount AS freeAmount,
+	w.ftotal_pay_amount AS totalPayAmount,
+	w.FBILL_DATE AS billDate,
+	w.FCODE AS code,
+	t.FID AS tid,
+    t.FPAYMENT_DATE as paymentDate,
+    t.FORG_PAYMENT_DATE as orgPaymentDate,
+	t.FPLAN_AMOUNT as planAmount,
+	t.FBILL_AMOUNT as billAmount,
+	t.FPAYMENT_AMOUNT as paymentAmount
+FROM
+	tsb_warehouse_bill W
+left join tcapital_plan_detail t ON t.FRELATION_ID=w.FID
+	where w.fid=#{fid}
+	 </select>
+    <select id="findRate" resultType="BigDecimal">
+    select FRATE from rate_center_bank where FORG_ID=#{orgId}
+    </select>
+    <select id="findPayMentByWareHouseBillId" resultType="cn.fooltech.fool_ops.eureka.rateService.vo.PayMentTemVo">
+SELECT
+	p.famount AS amount,
+	p.FFREE_AMOUNT AS freeAmount,
+	pb.FBILL_DATE AS paymentBillDate,
+wb.FBILL_DATE AS	wareHouseBillDate
+FROM
+	 tsb_warehouse_bill wb
+INNER JOIN tsb_payment_check p on  wb.fid=p.FBILL_ID
+INNER JOIN tsb_payment_bill pb ON pb.fid = p.FPAYMENT_ID
+
+WHERE
+	wb.FID = #{wareHouseBillId}
+	and wb.facc_ID=#{accId}
+    </select>
+      <select id="findPlanDateByCustomerId" resultType="cn.fooltech.fool_ops.eureka.rateService.vo.CapitalPlanDetailTemVo">
+    SELECT
+	t.FRELATION_ID as relationId,max(t.FORG_PAYMENT_DATE) AS paymentDate
+	FROM
+	tcapital_plan_detail t
+	INNER JOIN tsb_warehouse_bill W ON t.FRELATION_ID = w.fid
+	WHERE
+	t.FORG_PAYMENT_DATE <![CDATA[<]]>  NOW()
+	AND w.FTOTAL_AMOUNT != 0
+	and w.FBILL_TYPE = 41
+	AND w.FCUSTOMER_ID=#{customerId}
+	 and 	(
+		w.FTOTAL_AMOUNT != w.FFREE_AMOUNT + w.FTOTAL_PAY_AMOUNT
+	)	
+	and w.Facc_Id=#{accId}
+	GROUP BY
+	t.FRELATION_ID
+    </select>
+    <select id="findPlanDetailByWareHouseBillId" resultType="cn.fooltech.fool_ops.eureka.rateService.vo.CapitalPlanDetailTemVo">
+    SELECT
+    t.FPAYMENT_DATE as paymentDate,
+	t.FPLAN_AMOUNT as planAmount,
+	t.FBILL_AMOUNT as billAmount,
+	t.FPAYMENT_AMOUNT as paymentAmount
+	FROM
+	tcapital_plan_detail t
+	WHERE
+	t.FRELATION_SIGN = 41
+	AND t.FRELATION_ID=#{relationId}
+    
+    </select>
+    <select id="findPlanChangeLogByPlanDetailId" resultType="cn.fooltech.fool_ops.eureka.rateService.vo.CapitalPlanChangeLogTemVo">
+    select p.FCHANGE_TYPE AS changeType,p.FPRE_PAYMENT_DATE AS prePaymentDate,p.FPAYMENT_DATE AS paymentDate from tcapital_plan_change_log p  where p.FDETAIL_ID=#{detailId} and p.FACC_ID=#{accId}
+    </select>
+    <select id="findWareHouseBillDetailCostAmount" resultType="BigDecimal">
+    select IFNULL(sum(t.FCOST_AMOUNT),0) from tsb_warehouse_billdetail t where  t.FWAREHOUSE_BILL_ID=#{wareHouseBillId} and t.FACC_ID=#{accId}
+    </select>
+    <select id="findCostByWareHouseBillId" resultType="BigDecimal">
+	 select sum(cb.FFREE_AMOUNT) from tsb_cost_billcheck cb  where  cb.FBILL_ID=#{wareHouseBillId} and cb.FACC_ID=#{accId}
+    </select>
+       <select id="findWarehouseBillByCustomerIdAndDate" resultMap="wareHouseBillAndPlanDetail">
+	select
+	w.fid,
+	w.ftotal_amount AS totalAmount,
+	w.ffree_Amount AS freeAmount,
+	w.ftotal_pay_amount AS totalPayAmount,
+	w.FBILL_DATE AS billDate,
+	w.FCODE AS code,
+	t.FID AS tid,
+    t.FPAYMENT_DATE as paymentDate,
+    t.FORG_PAYMENT_DATE as orgPaymentDate,
+	t.FPLAN_AMOUNT as planAmount,
+	t.FBILL_AMOUNT as billAmount,
+	t.FPAYMENT_AMOUNT as paymentAmount
+FROM
+	tsb_warehouse_bill W
+left join tcapital_plan_detail t ON t.FRELATION_ID=w.FID
+WHERE
+	(
+		w.FTOTAL_AMOUNT = w.FFREE_AMOUNT + w.FTOTAL_PAY_AMOUNT
+	)	
+AND w.FBILL_TYPE = 41
+AND w.FTOTAL_AMOUNT != 0
+and (w.FBILL_DATE between  #{startDate} and #{endDate})
+
+AND w.FCUSTOMER_ID = #{customerId}
+and w.FACC_ID=#{accId}
+	 </select>
+	 
+	       <select id="findPlanDateByCustomerIdAndDate" resultType="cn.fooltech.fool_ops.eureka.rateService.vo.CapitalPlanDetailTemVo">
+    SELECT
+	t.FRELATION_ID as relationId,max(t.FORG_PAYMENT_DATE) AS paymentDate
+	FROM
+	tcapital_plan_detail t
+	INNER JOIN tsb_warehouse_bill W ON t.FRELATION_ID = w.fid
+	WHERE
+	t.FORG_PAYMENT_DATE <![CDATA[<]]>  NOW()
+	AND w.FTOTAL_AMOUNT != 0
+	and w.FBILL_TYPE = 41
+	and w.FACC_ID=#{accId}
+	AND w.FCUSTOMER_ID=#{customerId}
+	 and 	(
+		w.FTOTAL_AMOUNT != w.FFREE_AMOUNT + w.FTOTAL_PAY_AMOUNT
+	)	
+	and (w.FBILL_DATE between  #{startDate} and #{endDate})
+	GROUP BY
+	t.FRELATION_ID
+    </select>
+    <select id="findAttrNameById" resultType="String">
+    select a.Fname from tbd_auxiliary_attr a where a.fid=#{fid}
+    </select>
+</mapper>

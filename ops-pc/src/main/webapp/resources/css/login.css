@@ -1,0 +1,37 @@
+/*
+@Description: 登录界面CSS样式
+@Author:  雷董星
+@Update:   2015年5月20日
+*/
+*{font-size:12px;}
+body {font-family:verdana,helvetica,arial, sans-serif;padding:10px;font-size:12px; margin:0;}
+h2 {font-size:18px;font-weight:bold;margin:0;margin-bottom:15px;}
+a {text-decoration:none;}
+.demo-info{padding:0 0 12px 0;}
+.demo-tip{display:none;}
+.container{width: 100%;height: 98%; min-width: 960px;max-width:1920px;}
+.header{float: left;width: 100%; height: 19%;margin: 0 0 1% 0; }
+
+.header .header-left, .header-right{float: left;width: 50%;height: 100%;}
+.header-left img{float: right; padding-right: 10%;width: 60%; height: 72px; min-width: 345px; min-height: 72px; }
+
+.context{float: left; width: 100%; height:475px;  position:relative; min-width:960px; }
+@media screen and (max-width:1920px;){.context img{position:absolute;  width: 100%; height: 100%; min-width: 1920px; max-height: 875px;} /*position 璁剧疆div鍙畾浣嶅彲閲嶅彔*/  }
+@media screen and(max-width:2048px;){.context img{position:absolute;  width: 100%; height: 100%; min-width: 2048px; max-height: 975px;} /*position 璁剧疆div鍙畾浣嶅彲閲嶅彔*/  }
+@media screen and(min-width:960px;){.context img{position:absolute;  width: 100%; height: 100%; min-width: 960px; max-height: 475px;} /*position 璁剧疆div鍙畾浣嶅彲閲嶅彔*/}
+.context img{position:absolute;  width: 100%; height: 475px; min-height: 475px;max-height:480px;} /*position 璁剧疆div鍙畾浣嶅彲閲嶅彔*/
+.context-left{float: left;height: 100%; }
+.context .context-sider{float: right; margin: 3% 10% 3% 0; width: 25%; height:85%; min-height: 372px; position:relative;}
+.context .context-sider img{ float: left; position: absolute; width:100%; height: 97%;  min-width:346px;min-height:372px;max-height:416px;}
+.context .context-sider-login{float: left; width: 100%; height: 100%; position: absolute; padding: 10px 20px 0 25px;}
+
+.context .context-sider-login table{float: left; width: 95%; height: 100%; min-width: 346px; max-height: 372px;}
+.context .context-sider-login table .msg td{height:45px; min-height:45px; max-height:45px; padding: 0px;}
+.context .context-sider-login table tr{height:40px; max-height: 45px;}
+.context .context-sider-login table td{height:40px; max-height: 45px;}
+.context .context-sider-login table tbody{height:225px; max-height: 225px;}
+
+.footer{float: left; width: 100%; height: 29%;  padding-top: 5%;  min-width: 960px; max-width: 1920px; margin-top: 2%\0\9;}
+.footer .footer-center{float: left;width: 100%; height: 80%;text-align: center;}
+.footer-center span{padding: 1%;}
+.from-lable{color: #343434\9;}

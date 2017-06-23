@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.eureka.rateService.dao.RateMemberDao">
+<select id="queryRateMemberSum" resultType="cn.fooltech.fool_ops.eureka.rateService.vo.RateMemberSumVo">
+
+SELECT
+	r.FMEMBER_ID as memberId,
+	s.ACCOUNT_NAME as memberName,
+	sum(r.FEVENTS_NUMBER) as eventsNumber,
+	sum(r.FPLAN_TOTAL_TIME) as planTotalTime,
+	sum(
+		datediff(
+			r.FEVENT_COMPLETE_DATE,
+			r.FEVENT_BEGIN_DATE
+		)
+	) as totalTime,
+	sum(r.FCALC_DELAY_NUMBER) as calcDelayNumber,
+	sum(r.FDELAY_TIME) as delayTime ,
+ (1-(sum(r.FEFFICIENCY)/sum(r.FPLAN_TOTAL_TIME)))*100 as efficiency
+from
+	rate_member r inner JOIN smg_tuser s on r.FMEMBER_ID=s.FID
+	INNER JOIN tflow_task t ON t.fid = r.Fevent_id
+where r.FORG_ID=#{orgId}
+and r.Fis_calc=1
+and r.FACC_Id=#{accId}
+<if test="memberId!=null and memberId!=''">
+and r.FMEMBER_ID=#{memberId}
+</if>
+GROUP BY r.FMEMBER_ID
+<if test="sidx!=null and sidx=='member'">
+ORDER by memberName
+</if>
+<if test="sidx!=null and sidx=='planTotalTime'">
+ORDER by planTotalTime DESC 
+</if>
+<if test="sidx!=null and sidx=='calcDelayNumber'">
+ORDER by calcDelayNumber DESC
+</if>
+<if test="sidx!=null and sidx=='delayTime'">
+ORDER by delayTime DESC 
+</if>
+<if test="sidx!=null and sidx=='efficiency'">
+ORDER by efficiency DESC 
+</if>
+
+</select>
+<select id="queryRateMemberDetailByMemberId" resultType="cn.fooltech.fool_ops.eureka.rateService.vo.RateMemberDetailVo">
+SELECT
+	t.FNAME as taskName,
+	r.FEVENT_PLAN_START_DATE as planStartDate,
+	r.FEVENT_PLAN_END_DATE as planEndDate,
+	r.FEVENT_COMPLETE_DATE as completeDate,
+	r.FDELAY_TIME AS delaytime,
+	r.FCALC_DELAY_NUMBER AS delayNumber
+FROM
+	rate_member r
+INNER JOIN tflow_task t ON t.fid = r.Fevent_id
+WHERE
+r.FEVENT_PLAN_START_DATE between  #{startDay} and #{endDay}
+and	r.FMEMBER_ID = #{memberId}
+	and r.FORG_ID=#{orgId}
+	and r.fis_CALC=1
+	and r.FACC_Id=#{accId}
+</select>
+</mapper>

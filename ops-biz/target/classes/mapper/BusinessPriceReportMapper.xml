@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.domain.report.dao.BusinessPriceReportDao">
+
+    <resultMap id="BusinessPriceReportResultMap" type="cn.fooltech.fool_ops.domain.analysis.vo.CostAnalysisBillVo">
+        <id column="FID" property="id"/>
+        <result column="FCODE" property="code"/>
+        <result column="FBILL_DATE" property="billDate"/>
+        <result column="FSUPPLIER_ID" property="supplierId"/>
+        <result column="FCUSTOMER_ID" property="customerId"/>
+        <result column="supplierName" property="supplierName"/>
+        <result column="FGOODS_ID" property="goodsId"/>
+        <result column="goodsName" property="goodsName"/>
+        <result column="FGOOD_SPEC_ID" property="goodSpecId"/>
+        <result column="goodsSpecName" property="goodsSpecName"/>
+        <result column="FPUBLISH_FACTORY_PRICE" property="publishFactoryPrice"/>
+        <result column="FPUBLISH_FREIGHT_PRICE" property="publishFreightPrice"/>
+        <result column="FPUBLISH_TOTAL_PRICE" property="publishTotalPrice"/>
+        <result column="FREMARK" property="remark"/>
+        <result column="FPURCHASE_ID" property="purchaseId"/>
+    </resultMap>
+
+
+    <select id="queryBusinessPriceReport" resultMap="BusinessPriceReportResultMap">
+        SELECT
+        bill.*,
+        s.FNAME as supplierName,
+        g.FNAME as goodsName,
+        p.FNAME as goodsSpecName
+        from
+        tsb_cost_analysis_bill bill
+        left join tbd_supplier s on bill.FSUPPLIER_ID=s.FID
+        left join tbd_goods g on bill.FGOODS_ID=g.FID
+        left join tbd_good_spec p on bill.FGOODS_SPEC_ID=p.FID
+        <where>
+            bill.FPUBLISH=1
+            and bill.FPURCHASE=1
+            and bill.FBILL_DATE=(select max(x.FBILL_DATE) from tsb_cost_analysis_bill x where x.facc_id=#{accId})
+            and bill.FACC_ID=#{accId}
+
+            <choose>
+            <when test="receiptPlaceId != null and receiptPlaceId!=''">
+                and bill.FRECEIPT_PLACE = #{receiptPlaceId}
+            </when>
+            <otherwise>
+                and bill.FRECEIPT_PLACE in
+                (SELECT a.fid
+                from tbd_freight_address a
+                left join tsb_customer_address b on a.FID=b.FADDRESS_ID
+                where b.FCUSTOMER_ID=#{customerId})
+            </otherwise>
+            </choose>
+        <if test="goodsId != null and goodsId!=''">
+            and bill.FGOODS_ID = #{goodsId}
+        </if>
+        </where>
+        order by bill.FTOTAL_PRICE asc
+    </select>
+
+
+    <resultMap id="CostAnalysisBilldetailResultMap" type="cn.fooltech.fool_ops.domain.analysis.vo.CostAnalysisBilldetailVo">
+        <id column="FID"  property="id" />
+        <result column="FBILL_ID"  property="billId" />
+        <result column="FNO"  property="no" />
+        <result column="FTRANSPORT_BILL_ID"  property="transportBillId" />
+        <result column="FBILL_DATE"  property="billDate" />
+        <result column="FSUPPLIER_ID"  property="supplierId" />
+        <result column="supplierName"  property="supplierName" />
+        <result column="FDELIVERY_PLACE"  property="deliveryPlaceId" />
+        <result column="deliveryPlaceName"  property="deliveryPlaceName" />
+        <result column="FRECEIPT_PLACE"  property="receiptPlaceId" />
+        <result column="receiptPlaceName"  property="receiptPlaceName" />
+        <result column="FTRANSPORT_TYPE_ID"  property="transportTypeId" />
+        <result column="transportTypeName"  property="transportTypeName" />
+        <result column="FSHIPMENT_TYPE_ID"  property="shipmentTypeId" />
+        <result column="shipmentTypeName"  property="shipmentTypeName" />
+        <result column="FTRANSPORT_UNIT_ID"  property="transportUnitId" />
+        <result column="transportUnitName"  property="transportUnitName" />
+        <result column="FFREIGHT_PRICE"  property="freightPrice" />
+        <result column="FPUBLISH_FREIGHT_PRICE"  property="publishFreightPrice" />
+        <result column="FCONVERSION_RATE"  property="conversionRate" />
+        <result column="FBASE_PRICE"  property="basePrice" />
+        <result column="FPUBLISH_BASE_PRICE"  property="publishBasePrice" />
+        <result column="FEXECUTE_SIGN"  property="executeSign" />
+        <result column="FEXPECTED_DAYS"  property="expectedDays" />
+        <result column="FGROUND_COST_PRICE"  property="groundCostPrice" />
+        <result column="FREMARK"  property="remark" />
+        <result column="FCREATE_TIME"  property="createTime" />
+        <result column="FCREATOR_ID"  property="creatorId" />
+        <result column="FUPDATE_TIME"  property="updateTime" />
+        <result column="FORG_ID"  property="orgId" />
+        <result column="FACC_ID"  property="fiscalAccountId" />
+
+    </resultMap>
+
+    <sql id="Detail_Column_List">
+        FID,FBILL_ID,FNO,FTRANSPORT_BILL_ID,FBILL_DATE,FSUPPLIER_ID,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FTRANSPORT_UNIT_ID,FFREIGHT_PRICE,FPUBLISH_FREIGHT_PRICE,FCONVERSION_RATE,FBASE_PRICE,FPUBLISH_BASE_PRICE,FEXECUTE_SIGN,FEXPECTED_DAYS,FGROUND_COST_PRICE,FREMARK,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID
+    </sql>
+
+    <select id="queryBusinessPriceDetail" resultMap="CostAnalysisBilldetailResultMap">
+        SELECT
+          <include refid="Detail_Column_List" />,
+          (select b.FNAME from tbd_supplier b where a.FSUPPLIER_ID=b.FID) as supplierName,
+          (select c.FNAME from tbd_freight_address c where a.FDELIVERY_PLACE=c.FID) as deliveryPlaceName,
+          (select d.FNAME from tbd_freight_address d where a.FRECEIPT_PLACE=d.FID) as receiptPlaceName,
+          (select e.FNAME from tbd_auxiliary_attr e where a.FTRANSPORT_TYPE_ID=e.FID) as transportTypeName,
+          (select f.FNAME from tbd_auxiliary_attr f where a.FSHIPMENT_TYPE_ID=f.FID) as shipmentTypeName,
+          (select g.FNAME from tbd_auxiliary_attr g where a.FTRANSPORT_UNIT_ID=g.FID) as transportUnitName
+        FROM
+            tsb_cost_analysis_billdetail a
+        WHERE
+            a.FBILL_ID = #{billId}
+    </select>
+
+</mapper>

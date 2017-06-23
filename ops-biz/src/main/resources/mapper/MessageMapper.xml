@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.domain.message.dao.MessageDao">
+
+    <resultMap id="MessageResultMap" type="cn.fooltech.fool_ops.domain.message.vo.TodoVo">
+        <id column="busId" property="busId"/>
+        <result column="busType" property="busType"/>
+        <result column="endTime" property="endTime"/>
+        <result column="busTitle" property="busTitle"/>
+    </resultMap>
+
+
+    <select id="findTodoPage" resultMap="MessageResultMap">
+        select b.FCONTENT as busTitle, a.FBUS_DATA as busId, a.FBUS_CLASS as busType,
+        (case when a.FBUS_CLASS='cn.fooltech.fool_ops.domain.flow.entity.Plan' then (select p.FANTIPATE_END_TIME from tflow_plan p where p.fid=a.FBUS_DATA)
+        when a.FBUS_CLASS='cn.fooltech.fool_ops.domain.flow.entity.Task' then (select ifnull(t.FDELAYED_END_TIME,t.FANTIPATE_END_TIME) from tflow_task t where t.fid=a.FBUS_DATA)
+        else null end)  as endTime from tmc_message_paramater a
+        left join tmc_message b on  a.FMESSAGE_ID=b.fid
+        where b.FTYPE=1 and FOPER_TIME is null and FSEND_TYPE='INNER' and FACC_ID=#{accId}
+        and FRECEIVER_ID=#{receiverId}   order by b.fsend_time desc
+    </select>
+
+</mapper>

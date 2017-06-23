@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.analysis.dao.CostAnalysisDao">
+
+    <resultMap id="TransportRouteResultMap" type="cn.fooltech.fool_ops.analysis.vo.TransportRouteVo">
+        <id column="FID" property="id"/>
+        <result column="FTRANSPORT_BILL_ID" property="transportBillId"/>
+        <result column="FROUTE" property="route"/>
+        <result column="FDELIVERY_PLACE" property="deliveryPlace"/>
+        <result column="FRECEIPT_PLACE" property="receiptPlace"/>
+        <result column="FTRANSPORT_TYPE_ID" property="transportTypeId"/>
+        <result column="FSHIPMENT_TYPE_ID" property="shipmentTypeId"/>
+        <result column="FCREATE_TIME" property="createTime"/>
+        <result column="FCREATOR_ID" property="creatorId"/>
+        <result column="FUPDATE_TIME" property="updateTime"/>
+        <result column="FORG_ID" property="orgId"/>
+        <result column="FACC_ID" property="accId"/>
+
+    </resultMap>
+
+    <resultMap type="cn.fooltech.fool_ops.analysis.vo.CostAnalysisBillVo" id="CostAnalysisBillResultMap">
+
+        <id property="id" column="FID"/>
+
+        <result property="billDate" column="FBILL_DATE"/>
+
+        <result property="route" column="FROUTE"/>
+
+        <result property="supplierId" column="FSUPPLIER_ID"/>
+
+        <result property="goodsId" column="FGOODS_ID"/>
+
+        <result property="goodsSpecId" column="FGOODS_SPEC_ID"/>
+
+        <result property="goodsUintId" column="FGOODS_UINT_ID"/>
+
+        <result property="deliveryPlace" column="FDELIVERY_PLACE"/>
+
+        <result property="receiptPlace" column="FRECEIPT_PLACE"/>
+
+        <result property="factoryPrice" column="FFACTORY_PRICE"/>
+
+        <result property="publishFactoryPrice" column="FPUBLISH_FACTORY_PRICE"/>
+
+        <result property="freightPrice" column="FFREIGHT_PRICE"/>
+
+        <result property="publishFreightPrice" column="FPUBLISH_FREIGHT_PRICE"/>
+
+        <result property="totalPrice" column="FTOTAL_PRICE"/>
+
+        <result property="publishTotalPrice" column="FPUBLISH_TOTAL_PRICE"/>
+
+        <result property="executeSign" column="FEXECUTE_SIGN"/>
+
+        <result property="expectedDays" column="FEXPECTED_DAYS"/>
+
+        <result property="remark" column="FREMARK"/>
+
+        <result property="publish" column="FPUBLISH"/>
+
+        <result property="purchase" column="FPURCHASE"/>
+
+        <result property="createTime" column="FCREATE_TIME"/>
+
+        <result property="creatorId" column="FCREATOR_ID"/>
+
+        <result property="updateTime" column="FUPDATE_TIME"/>
+
+        <result property="orgId" column="FORG_ID"/>
+
+        <result property="fiscalAccountId" column="FACC_ID"/>
+
+    </resultMap>
+
+    <update id="invalidPurchasePriceByEffectiveDate">
+        <![CDATA[
+
+        UPDATE tsb_purchase_price a
+        SET  a.FENABLE=0
+        WHERE DATE(FEFFECTIVE_DATE) < CURDATE()
+
+        ]]>
+    </update>
+
+
+    <update id="invalidGroundPriceByEffectiveDate">
+        <![CDATA[
+
+        UPDATE tsb_purchase_price a
+        SET  a.FENABLE=0
+        WHERE DATE(FEFFECTIVE_DATE) < CURDATE()
+
+        ]]>
+    </update>
+    <insert id="selectInsertCostAnalysisBill">
+
+       <![CDATA[
+
+INSERT INTO TSB_COST_ANALYSIS_BILL (
+  FID,
+  FBILL_DATE,
+  FROUTE,
+  FSUPPLIER_ID,
+  FGOODS_ID,
+  FGOODS_SPEC_ID,
+  FGOODS_UINT_ID,
+  FDELIVERY_PLACE,
+  FRECEIPT_PLACE,
+  FFACTORY_PRICE,
+  FCREATE_TIME,
+  FCREATOR_ID,
+  FUPDATE_TIME,
+  FORG_ID,
+  FACC_ID,
+  FPURCHASE
+)
+SELECT
+  REPLACE(UUID(), '-', ''),
+  NOW() AS FBILL_DATE,
+  A.FROUTE,
+  B.FSUPPLIER_ID,
+  B.FGOODS_ID,
+  B.FGOOD_SPEC_ID,
+  D.FUNIT_ID AS FGOOD_FUNIT_ID,
+  A.FDELIVERY_PLACE,
+  A.FRECEIPT_PLACE,
+  CONVERT(
+    IFNULL(B.FDELIVERY_PRICE, 0) / IFNULL(E.FSCALE, 0),
+    DECIMAL
+  ) AS FFACTORY_PRICE,
+  B.FCREATE_TIME,
+  B.FCREATOR_ID,
+  B.FUPDATE_TIME,
+  B.FORG_ID,
+  B.FACC_ID,
+  1
+FROM
+  TSB_TRANSPORT_ROUTE A,
+  TSB_PURCHASE_PRICE B,
+  TBD_GOODS D,
+  TBD_UNIT E
+WHERE A.`FDELIVERY_PLACE` = B.`FDELIVERY_PLACE`
+  AND B.FENABLE = '1'
+  AND D.FUNIT_ID = E.FID
+  AND B.FGOODS_ID = D.FID
+  AND A.`FRECEIPT_PLACE` IN
+  (SELECT DISTINCT
+    (FID)
+  FROM
+    (SELECT DISTINCT
+      (B.FID)
+    FROM
+      TSB_CUSTOMER_ADDRESS A,
+      TBD_FREIGHT_ADDRESS B
+    WHERE A.`FADDRESS_ID` = B.FID
+      AND B.FPARENT_ID IS NULL
+    UNION
+    ALL
+    SELECT DISTINCT
+      (B.FID)
+    FROM
+      TSB_CUSTOMER_ADDRESS A,
+      TBD_FREIGHT_ADDRESS B
+    WHERE A.`FADDRESS_ID` = B.FPARENT_ID) A1)
+    ORDER BY a.fid ,b.fid ,d.fid ,e.fid
+       ]]>
+    </insert>
+
+    <select id="selectAllCostAnalysisBillByToday" resultMap="CostAnalysisBillResultMap">
+    SELECT * FROM tsb_cost_analysis_bill
+    WHERE    FPURCHASE =1 AND
+     TO_DAYS(fcreate_time) = TO_DAYS(NOW())
+
+  </select>
+
+
+    <insert id="insertCostAnalysisBilldetail">
+    INSERT INTO tsb_cost_analysis_billdetail (
+  FID,
+  FBILL_ID,
+  FNO,
+  FDELIVERY_PLACE,
+  FRECEIPT_PLACE,
+  FTRANSPORT_TYPE_ID,
+  FSHIPMENT_TYPE_ID,
+  FCREATE_TIME,
+  FCREATOR_ID,
+  FUPDATE_TIME,
+  FORG_ID,
+  FACC_ID
+)
+
+ SELECT
+  REPLACE(UUID(), '-', ''),
+  #{billId},
+ (SELECT COALESCE(MAX(FNO),0)+1 from tsb_cost_analysis_billdetail WHERE FBILL_ID ),
+ #{billId},
+#{deliveryPlace},
+#{receiptPlace},
+#{transportTypeId},
+#{shipmentTypeId},
+#{createTime},
+#{creatorId},
+#{updateTime},
+#{orgId},
+#{accId}
+
+
+  </insert>
+
+    <update id="updateCostAnalysisBilldetailFreight">
+update tsb_cost_analysis_billdetail a,tsb_transport_route b, tsb_transport_price c
+set
+ a.FTRANSPORT_BILL_ID=b.FTRANSPORT_BILL_ID,
+a.FBILL_DATE=c.FBILL_DATE,
+a.FFREIGHT_PRICE=c.FAMOUNT,
+a.FEXPECTED_DAYS=c.FEXPECTED_DAYS,
+a.FEXECUTE_SIGN=c.FEXECUTE_SIGN
+where
+ a.FDELIVERY_PLACE=b.FDELIVERY_PLACE
+and a.FRECEIPT_PLACE=b.FRECEIPT_PLACE
+and a.FTRANSPORT_TYPE_ID=b.FTRANSPORT_TYPE_ID
+and a.FSHIPMENT_TYPE_ID=b.FSHIPMENT_TYPE_ID
+and b.FTRANSPORT_BILL_ID=b.FID
+and  TO_DAYS(a.fcreate_time) = TO_DAYS(NOW())
+  </update>
+
+    <update id="updateCostAnalysisBillFreight">
+
+
+UPDATE tsb_cost_analysis_bill a
+SET a.FFREIGHT_PRICE=(
+SELECT  SUM(IFNULL(b.FFREIGHT_PRICE,0))   as FFREIGHT_PRICE
+FROM tsb_cost_analysis_billdetail b WHERE a.FID=b.FBILL_ID
+group by b.FBILL_ID
+
+)
+
+</update>
+
+    <update id="updateCostAnalysisBillByYesterday">
+        <![CDATA[
+        UPDATE
+  TSB_COST_ANALYSIS_BILL A
+  INNER JOIN
+    (SELECT
+      *
+    FROM
+      TSB_COST_ANALYSIS_BILL B
+    WHERE TO_DAYS(NOW()) - TO_DAYS(FCREATE_TIME) <= 1) B
+    ON B.FROUTE = A.FROUTE
+    AND B.FSUPPLIER_ID = A.FSUPPLIER_ID
+    AND B.FGOODS_ID = A.FGOODS_ID
+    AND A.FGOODS_SPEC_ID = B.FGOODS_SPEC_ID
+    AND A.FGOODS_UINT_ID = B.FGOODS_UINT_ID
+    AND A.FDELIVERY_PLACE = B.FDELIVERY_PLACE
+    AND A.FRECEIPT_PLACE = B.FRECEIPT_PLACE
+    SET a.FPUBLISH_FREIGHT_PRICE = b.FPUBLISH_FREIGHT_PRICE
+                 ]]>
+    </update>
+<delete id="cleanCostAnalysisBillToday">
+    DELETE  from TSB_COST_ANALYSIS_BILL a where  to_days(FCREATE_TIME) = to_days(now())
+
+</delete>
+    <select id="selectTransportRouteByCondition3" resultMap="TransportRouteResultMap">
+SELECT
+  a.*
+FROM
+  TSB_TRANSPORT_ROUTE a,
+  TSB_PURCHASE_PRICE b
+WHERE a.`FDELIVERY_PLACE` = b.`FDELIVERY_PLACE`
+  AND B.FENABLE = '1'
+  AND a.`FRECEIPT_PLACE` IN
+  (SELECT DISTINCT
+    (FID)
+  FROM
+    (SELECT DISTINCT
+      (b.FID)
+    FROM
+      tsb_customer_address a,
+      TBD_FREIGHT_ADDRESS b
+    WHERE a.`FADDRESS_ID` = b.FID
+      AND b.FPARENT_ID IS NULL
+    UNION
+    ALL
+    SELECT DISTINCT
+      (b.FID)
+    FROM
+      tsb_customer_address a,
+      TBD_FREIGHT_ADDRESS b
+    WHERE a.`FADDRESS_ID` = b.FPARENT_ID) A1)
+    </select>
+
+</mapper>

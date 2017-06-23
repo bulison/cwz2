@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+.btn-hide{
+	width: 10px;
+    height: 15px;
+    float:right;
+    margin-right:10px;
+    background-image: url(../images/btn-show01.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+.btn-show{
+	width: 15px;
+    height: 10px;
+    float:right;
+    margin-right:10px;
+    background-image: url(../images/btn-show02.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}

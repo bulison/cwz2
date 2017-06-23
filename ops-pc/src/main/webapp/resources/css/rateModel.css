@@ -1,0 +1,58 @@
+@CHARSET "UTF-8";
+
+.form1 p font{
+	width:100px;
+}
+
+#buttonBox{
+	margin-bottom:10px;
+	width:100%;
+}
+
+.searchBox{
+	/* background: #fff; */
+	margin:0 20px 10px 0;
+	/* border: 1px #ccc solid; */
+}
+#inSearch{
+	/* background: url('/ops/resources/images/notebook.jpg') repeat-y; */
+	padding: 10px 20px 10px 20px;
+	background-position-x: 10px;
+	padding-right: 110px;
+}
+.listChart{
+	right: 20px;
+	position: absolute;
+}
+.list-on {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 20px;
+    width: 0px;
+    height: 0px;
+    background: url("/ops/resources/images/list_on.png") no-repeat;
+}
+.list-off{
+  display:inline-block;
+  margin:0 10px;
+  padding:20px;
+  width:0px;
+  height:0px;
+  background: url("/ops/resources/images/list.png") no-repeat;
+}
+.chart-on{
+  display:inline-block;
+  margin:0 10px;
+  padding:20px;
+  width:0px;
+  height:0px;
+  background: url("/ops/resources/images/chart_on.png") no-repeat;
+}
+.chart-off {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 20px;
+    width: 0px;
+    height: 0px;
+    background: url("/ops/resources/images/chart.png") no-repeat;
+}

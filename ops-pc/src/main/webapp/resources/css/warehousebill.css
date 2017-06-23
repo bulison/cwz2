@@ -1,0 +1,234 @@
+@charset "utf-8";
+/*
+*新模板CSS
+*/
+#addBox{
+	background:#F0F0F0;
+}
+.myform{
+	/* background:none; */background: #F0F0F0;
+}
+.myform p {
+    display: inline-block;
+    padding: 0px;
+    margin: 2px 0;
+    font-size: 14px;
+	font-family: 宋体;
+	width:1050px;
+}
+.myform p em{
+    color:red;
+}
+.myform p font {
+    width: 150px;
+    height: 27px;
+    line-height: 30px;
+    text-align: right;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+}
+.myform .textBox,.myform .dateBox,.myform .textBox-mid{
+    width:180px;
+    height:27px;
+    border: 1px solid #d0d9e7;
+    border-radius:2px;
+}
+.bill-form{
+	padding:10px 0;
+}
+.shadow{
+	background:#fff;
+	padding:5px 0;
+	margin:0px 20px 10px 20px;
+	-moz-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	-o-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	-ms-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+}
+.bill-form h1{
+	font:800 16px 宋体  !important;
+	color:#50b3e7;
+	margin-left:60px;
+	height:18px;
+}
+.bill-form h2{
+	font:800 14px 宋体  !important;
+	color:#ffc96c;
+	margin-left:10px;
+	display: inline-block;
+}
+.bill-form .billTitle{
+	padding:5px 0;
+	margin-left:20px;
+}
+.myTitle{
+	margin-bottom: -30px;
+}
+.in-box{
+	margin:5px 10px 10px 20px;
+	overflow-y:auto;
+	height:170px;
+}
+.mybtn-footer{
+	box-shadow: 0 -2px 7px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	-o-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	-ms-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	padding: 5px 0 20px 0;
+	/* position: fixed; */position: absolute;
+	bottom: 0px;
+	width: 100%;
+	text-align:right;
+	height:40px;
+	background:#F0F0F0;
+	z-index:1000;
+}
+.mybtn-footer a{
+	margin-right:20px;
+}
+.mybtn-footer input{
+	width:56px;
+	margin-right:20px;
+}
+.mybtn-footer input[type=button]{
+	width:76px;
+	margin-right:20px;
+	height: 35px;
+	line-height: 35px;
+}
+.mybtn-blue {
+    background: #50b3e7;
+    border-color: #50b3e7;
+}
+.mybtn-s {
+	border-radius:3px;
+    font-size: 16px;
+    min-width: 56px;
+    height: 33px;
+    padding: 1px 10px;
+    font-weight: bolder !important;
+    line-height: 33px;
+}
+.in-box p{
+	text-align:left;
+}
+.scroll1{width: 100%; height: 20px; /* position: fixed; */ position: absolute; bottom:0;  background: #CFCFCF;z-index:10000;}
+.scroll2{width: 20%; height: 20px; /* position: fixed; */position: absolute;background: #A1A1A1; margin-bottom: 25px;z-index:10000;}
+
+
+#dataBox .datagrid-body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    zoom: 1;
+}
+.fixed{
+	position:fixed;
+	border-width:1px 0;
+	z-index:8999;
+}
+#dataBox .in-box{
+	overflow-y: inherit;
+	overflow-x: hidden;
+	height:auto;
+}
+#dataBox{
+	margin-bottom:50px;
+}
+#bill .in-box{
+	text-align:center;
+	overflow-y: inherit;
+	overflow-x: hidden;
+	height:auto;
+}
+#bill{
+	margin-top: 24px !important;
+}
+.billTitle #square2{
+	background:#ffc96c;
+	width:5px;
+	height:24px;
+	position: relative;
+    margin-top: -5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.bill-form #title{
+	/* position:fixed; */
+	position: absolute;
+	top:0px;
+	background:#F0F0F0;
+	width:100%; /*写给不兼容的浏览器*/
+	width:calc(100% - 40px);
+	width:-moz-calc(100% - 40px);
+	width:-webkit-calc(100% - 40px);
+	padding:0 20px;
+	z-index:8999;
+}
+#title #square1{
+	background:#50b3e7;
+	width:30px;
+	height:40px;
+	position:absolute;
+	margin-top:-11px;
+}
+#square1 #triangle{
+	width: 0;
+	height: 0;
+	border-top: 5px solid transparent;
+	border-left: 10px solid #50b3e7;
+	border-bottom: 5px solid transparent;
+	margin-left:30px;
+	margin-top:15px;
+}
+.backBtn{
+    width:100%;
+    height:100%;
+    position:absolute;
+    background-image: url("../images/back_img.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor:pointer
+}
+.repertory{
+	height: 50px; 
+	position:fixed;
+	bottom: 0px; 
+	left: 0px; 
+	width:99%;
+	word-wrap: break-word;
+	font-size: 12px;
+	line-height: 25px;
+	 }
+.repertory ul {
+	margin-left: 10px; 
+    overflow: hidden; 
+    display:inline-block;
+}
+.repertory ul li{
+	float: left;
+}
+.number{ color: red;}
+.inlist{
+    padding-top: 30px;
+}
+.status{
+	background: none !important;
+}
+/*未审核*/
+.status0{
+	background: url("/ops-pc/resources/images/billstatus-0.png") no-repeat 390px 0%;
+}
+/*已审核*/
+.status1{
+	background: url("/ops-pc/resources/images/billstatus-1.png") no-repeat 390px 0%;
+}
+/*已作废*/
+.status2{
+	background: url("/ops-pc/resources/images/billstatus-2.png") no-repeat 390px 0%;
+}
+
+#search-form .dhxDiv{
+	margin:5px 5px 0px 0px;
+}

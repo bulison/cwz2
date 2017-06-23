@@ -1,0 +1,5 @@
+@CHARSET "UTF-8";
+.GKeyboard_container{ border:#eeeeee outset 2px; padding:5px 10px 5px 10px; }
+.GKeyboard_container .keyboard_key_out { border:#e5e5e5 outset 1px; cursor:default; background:#eeeeee; text-align:center; }
+.GKeyboard_container .keyboard_key_over { border:#d5d5d5 outset 1px; cursor:default; background:#cccccc; text-align:center; }
+.GKeyboard_container .keyboard_key_click { border:#d5d5d5 inset 1px; cursor:default; background:#cccccc; text-align:center; }

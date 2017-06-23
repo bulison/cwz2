@@ -1,0 +1,16 @@
+@CHARSET "UTF-8";
+*{ 
+	margin:0px;
+	padding:0px;
+}
+.btn{
+	height: 35px;
+	margin: 10px 0;
+}
+.form_input,.btn,form{
+	display: inline-block;
+}
+.formula{width: 100%; height: 100%}
+.validatebox-invalid{
+	background-color: #FFE1E1;
+}

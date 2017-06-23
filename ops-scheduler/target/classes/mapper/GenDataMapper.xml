@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.analysis.dao.GenDataDao">
+    <insert id="genTsbPurchasePrice">
+            <![CDATA[
+INSERT INTO tsb_purchase_price (
+        FID,
+        FCODE,
+        FBILL_DATE,
+        FSUPPLIER_ID,
+        FGOODS_ID,
+        FGOOD_SPEC_ID,
+        FUNIT_ID,
+        FFACTORY_PRICE,
+        FTAX_POINT,
+        FAFTER_TAX_PRICE,
+        FPICK_UP_CHARGE,
+        FDELIVERY_PRICE,
+        FEFFECTIVE_DATE,
+        FDELIVERY_PLACE,
+        FDESCRIBE,
+        FENABLE,
+        FCREATE_TIME,
+        FCREATOR_ID,
+        FUPDATE_TIME,
+        FORG_ID,
+        FACC_ID
+        )
+        SELECT
+        REPLACE(UUID(), '-', ''),
+        RAND(),
+        NOW(),
+        (SELECT
+        fid
+        FROM
+        tbd_supplier
+        LIMIT 1),
+        a.FGOODS_ID,
+        a.FSPEC_ID,
+        a.FACCOUNT_UINT_ID,
+        100 AS FFACTORY_PRICE,
+        1 AS FTAX_POINT,
+        1 AS FAFTER_TAX_PRICE,
+        1 AS FPICK_UP_CHARGE,
+        1 AS FDELIVERY_PRICE,
+        DATE_SUB(CURDATE(), INTERVAL - 1 DAY) AS FEFFECTIVE_DATE,
+        a.FWAREHOUSE_ID AS FDELIVERY_PLACE,
+        '' AS FDESCRIBE,
+        1 AS FENABLE,
+        NOW() AS FCREATE_TIME,
+        '8a80cb8159252e6a015925343e3a0001' AS FCREATOR_ID,
+        NOW() AS FUPDATE_TIME,
+        '8a80cb8159251f2b015925218abf0000' AS FORG_ID,
+        '8a80cb8159251f2b015925218db30002' AS FACC_ID
+        FROM
+        TSB_STOCK_STORE a  ORDER BY a.FWAREHOUSE_ID,a.FGOODS_ID,FSPEC_ID
+          ]]>
+        </insert>
+        <insert id="genTsbTransportPrice">
+             <![CDATA[
+                INSERT INTO tsb_transport_price (
+  FID,
+  FCODE,
+  FBILL_DATE,
+  FSUPPLIER_ID,
+  FDELIVERY_PLACE,
+  FRECEIPT_PLACE,
+  FTRANSPORT_TYPE_ID,
+  FSHIPMENT_TYPE_ID,
+  FEFFECTIVE_DATE,
+  FAMOUNT,
+  FEXECUTE_SIGN,
+  FEXPECTED_DAYS,
+  FDESCRIBE,
+  FENABLE,
+  FCREATE_TIME,
+  FCREATOR_ID,
+  FUPDATE_TIME,
+  FORG_ID,
+  FACC_ID
+)
+SELECT
+  REPLACE(UUID(), '-', ''),
+  RAND(),
+  NOW(),
+  (SELECT
+    fid
+  FROM
+    tbd_supplier
+  LIMIT 1) AS FSUPPLIER_ID,
+  (SELECT
+    FWAREHOUSE_ID
+  FROM
+    TSB_STOCK_STORE
+  ORDER BY FACCOUNT_QUENTITY DESC,
+    FGOODS_ID
+  LIMIT 1),
+  (A.Fid) AS FRECEIPT_PLACE,
+  '402881fa58f19bb40158f232814f0008' AS FTRANSPORT_TYPE_ID,
+  '402881fa58f19bb40158f2333e4d000b' AS FSHIPMENT_TYPE_ID,
+  DATE_SUB(CURDATE(), INTERVAL - 1 DAY) AS FEFFECTIVE_DATE,
+  10000 AS FAMOUNT,
+  1 AS FEXECUTE_SIGN,
+  3 AS FEXPECTED_DAYS,
+  '描述' FDESCRIBE,
+  1 AS FENABLE,
+  NOW() AS FCREATE_TIME,
+  '8a80cb8159252e6a015925343e3a0001' AS FCREATOR_ID,
+  NOW() AS FUPDATE_TIME,
+  '8a80cb8159251f2b015925218abf0000' AS FORG_ID,
+  '8a80cb8159251f2b015925218db30002' AS FACC_ID
+FROM
+  TBD_FREIGHT_ADDRESS A
+    ]]>
+        </insert>
+
+</mapper>

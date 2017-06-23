@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.eureka.rateService.dao.SaleOutDao">
+
+    <resultMap id="SaleOutVoResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.SaleOutVo">
+        <result column="saleId" property="saleId"/>
+        <result column="saleCode" property="saleCode"/>
+        <result column="salesManID" property="salesManID"/>
+        <result column="salesMan" property="salesMan"/>
+        <result column="customerID" property="customerID"/>
+        <result column="customerCode" property="customerCode"/>
+        <result column="customerName" property="customerName"/>
+        <result column="saleDate" property="saleDate"/>
+        <result column="planFinishDate" property="planFinishDate"/>
+        <result column="saleAmount" property="saleAmount"/>
+        <result column="hasIncome" property="hasIncome"/>
+        <result column="notIncome" property="notIncome"/>
+        <result column="backAmount" property="backAmount"/>
+        <result column="saleExp" property="saleExp"/>
+        <result column="goodCost" property="goodCost"/>
+        <result column="backCost" property="backCost"/>
+        <result column="profit" property="profit"/>
+        <result column="estimatedYieldRate" property="estimatedYieldRate"/>
+        <result column="referenceYieldRate" property="referenceYieldRate"/>
+        <result column="effectiveYieldRate" property="effectiveYieldRate"/>
+        <result column="currentYieldRate" property="currentYieldRate"/>
+        <result column="lastIncomeDate" property="lastIncomeDate"/>
+        <result column="lastBackDate" property="lastBackDate"/>
+        <result column="percentageAmount" property="percentageAmount"/>
+    </resultMap>
+
+
+    <resultMap id="SaleOutRelationVoResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.SaleOutRelationVo">
+        <result column="billId" property="billId"/>
+        <result column="billDate" property="billDate"/>
+        <result column="billType" property="billType"/>
+        <result column="billCode" property="billCode"/>
+        <result column="goodsNameSpec" property="goodsNameSpec"/>
+        <result column="quentity" property="quentity"/>
+        <result column="price" property="price"/>
+        <result column="amount" property="amount"/>
+        <result column="costAmount" property="costAmount"/>
+    </resultMap>
+
+
+    <resultMap id="SaleOutDetailVoResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.SaleOutDetailVo">
+        <result column="saleId" property="saleId"/>
+        <result column="detailId" property="detailId"/>
+        <result column="goodId" property="goodId"/>
+        <result column="specId" property="specId"/>
+        <result column="unitId" property="unitId"/>
+        <result column="saleCode" property="saleCode"/>
+        <result column="salesMan" property="salesMan"/>
+        <result column="customerCode" property="customerCode"/>
+        <result column="customerName" property="customerName"/>
+        <result column="saleDate" property="saleDate"/>
+        <result column="planFinishDate" property="planFinishDate"/>
+
+        <result column="goodCode" property="goodCode"/>
+        <result column="goodName" property="goodName"/>
+        <result column="specName" property="specName"/>
+        <result column="goodUnit" property="goodUnit"/>
+        <result column="saleQuantity" property="saleQuantity"/>
+
+        <result column="salePrice" property="salePrice"/>
+        <result column="saleAmount" property="saleAmount"/>
+        <result column="hasIncome" property="hasIncome"/>
+        <result column="notIncome" property="notIncome"/>
+        <result column="backQuantity" property="backQuantity"/>
+        <result column="backAmount" property="backAmount"/>
+        <result column="goodCost" property="goodCost"/>
+        <result column="backCost" property="backCost"/>
+        <result column="totalSaleExp" property="totalSaleExp"/>
+        <result column="saleExp" property="saleExp"/>
+        <result column="profit" property="profit"/>
+        <result column="lastIncomeDate" property="lastIncomeDate"/>
+        <result column="lastBackDate" property="lastBackDate"/>
+        <result column="priceFlag" property="priceFlag"/>
+        <result column="percentageAmount" property="percentageAmount"/>
+    </resultMap>
+
+    <resultMap id="TradeRecordVoResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.TradeRecordVo">
+        <result column="billDate" property="billDate"/>
+        <result column="paymentType" property="paymentType"/>
+        <result column="amount" property="amount"/>
+        <result column="amountType" property="amountType"/>
+    </resultMap>
+
+    <select id="saleOutAnalyze" resultMap="SaleOutVoResultMap">
+        CALL p_sale_out_analysis(#{startDate},#{endDate},#{customerId},#{saleMemberId},#{saleCode},#{orgId},#{accountId},#{starRow},#{maxRow},0);
+    </select>
+
+
+    <select id="countSaleOutAnalyze" resultType="java.lang.Long">
+        CALL p_sale_out_analysis(#{startDate},#{endDate},#{customerId},#{saleMemberId},#{saleCode},#{orgId},#{accountId},0,0,1);
+    </select>
+
+    <select id="saleOutRelationAnalyze" resultMap="SaleOutRelationVoResultMap">
+        CALL p_sale_out_relation(#{saleoutId},#{starRow},#{maxRow},0);
+    </select>
+
+
+    <select id="countSaleOutRelationAnalyze" resultType="java.lang.Long">
+        CALL p_sale_out_relation(#{saleoutId},0,0,1);
+    </select>
+
+    <select id="saleOutDetailAnalyze" resultMap="SaleOutDetailVoResultMap">
+        CALL p_sale_out_detail_analysis(#{startDate},#{endDate},#{customerId},#{saleMemberId},#{saleCode},#{goodId},#{goodSpecId},#{orgId},#{accountId},#{starRow},#{maxRow},0);
+    </select>
+
+
+    <select id="countSaleOutDetailAnalyze" resultType="java.lang.Long">
+        CALL p_sale_out_detail_analysis(#{startDate},#{endDate},#{customerId},#{saleMemberId},#{saleCode},#{goodId},#{goodSpecId},#{orgId},#{accountId},0,0,1);
+    </select>
+
+    <select id="queryTradeRecord" resultMap="TradeRecordVoResultMap">
+        CALL p_sale_out_payment_list(#{saleOutId});
+    </select>
+</mapper>

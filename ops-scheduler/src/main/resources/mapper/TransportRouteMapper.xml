@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.analysis.dao.TransportRouteDao">
+
+
+    <resultMap id="TransportRouteResultMap" type="cn.fooltech.fool_ops.analysis.vo.TransportRouteVo">
+        <id column="FID" property="id"/>
+        <result column="FTRANSPORT_BILL_ID" property="transportBillId"/>
+        <result column="FROUTE" property="route"/>
+        <result column="FDELIVERY_PLACE" property="deliveryPlace"/>
+        <result column="FRECEIPT_PLACE" property="receiptPlace"/>
+        <result column="FTRANSPORT_TYPE_ID" property="transportTypeId"/>
+        <result column="FSHIPMENT_TYPE_ID" property="shipmentTypeId"/>
+        <result column="FCREATE_TIME" property="createTime"/>
+        <result column="FCREATOR_ID" property="creatorId"/>
+        <result column="FUPDATE_TIME" property="updateTime"/>
+        <result column="FORG_ID" property="orgId"/>
+        <result column="FACC_ID" property="accId"/>
+
+    </resultMap>
+    <sql id="Base_Column_List">
+        FID,FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID
+    </sql>
+    <delete id="deleteAll">
+        delete from TSB_TRANSPORT_ROUTE
+    </delete>
+
+    <insert id="insert" parameterType="cn.fooltech.fool_ops.analysis.vo.TransportRouteVo">
+        insert into
+        tsb_transport_route (FID,FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID)
+        values
+        ( REPLACE(UUID(), '-', ''),#{transportBillId},#{route},#{deliveryPlace},#{receiptPlace},#{transportTypeId},#{shipmentTypeId},#{createTime},#{creatorId},#{updateTime},#{orgId},#{accId})
+    </insert>
+
+
+    <select id="isExistRouteRule1" resultType="int" parameterType="java.lang.String">
+        <![CDATA[
+
+
+          SELECT COUNT(*) FROM TSB_TRANSPORT_ROUTE A,TSB_TRANSPORT_PRICE B
+    WHERE A.FDELIVERY_PLACE=B.FDELIVERY_PLACE
+    AND A.FRECEIPT_PLACE=B.FRECEIPT_PLACE
+    AND A.FTRANSPORT_TYPE_ID=B.FTRANSPORT_TYPE_ID
+    AND A.FSHIPMENT_TYPE_ID=B.FSHIPMENT_TYPE_ID
+    AND  B .FID=#{value}
+
+
+        ]]>
+    </select>
+
+
+    <select id="getListByRouteRule2"
+            resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+        SELECT
+     DISTINCT(fid),FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID
+        FROM
+        TSB_TRANSPORT_ROUTE A
+        WHERE FRECEIPT_PLACE = #{deliveryPlace}
+         and
+         FROUTE NOT LIKE CONCAT('%',#{receiptPlace} , '%')
+         and FROUTE != CONCAT(FROUTE,',',#{route})
+
+        ]]>
+    </select>
+
+    <select id="getListByRouteRule3" parameterType="java.lang.String"
+            resultMap="TransportRouteResultMap">
+        <![CDATA[
+        SELECT
+      DISTINCT(fid),FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID
+        FROM
+        TSB_TRANSPORT_ROUTE A
+        WHERE FDELIVERY_PLACE = #{receiptPlace}
+        and  FROUTE NOT LIKE CONCAT('%',#{deliveryPlace} , '%')
+         and FROUTE != CONCAT(#{route},',',FROUTE)
+
+        ]]>
+    </select>
+
+
+    <select id="getListByRouteRule4" parameterType="java.lang.String"
+            resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+select DISTINCT(fid),FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID
+from (
+select a.* from TSB_TRANSPORT_ROUTE a , TBD_FREIGHT_ADDRESS b
+where a.FDELIVERY_PLACE=b.FPARENT_ID
+and b.enable='1'
+and b.fid=#{deliveryPlace}
+     and FROUTE != CONCAT(FROUTE,',',#{route})
+
+and  A.FROUTE NOT LIKE CONCAT('%',#{receiptPlace} , '%')
+)c
+
+
+        ]]>
+    </select>
+
+    <select id="getListByRouteRule5" parameterType="java.lang.String"
+            resultMap="TransportRouteResultMap">
+        <![CDATA[
+
+select DISTINCT(fid),FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID
+from (
+select a.* from TSB_TRANSPORT_ROUTE a , TBD_FREIGHT_ADDRESS b
+where a.FDELIVERY_PLACE=b.FPARENT_ID
+and b.fid=#{receiptPlace}
+and b.enable='1'
+and  A.FROUTE NOT LIKE CONCAT('%',#{deliveryPlace} , '%')
+   and a.FROUTE != CONCAT(#{route},',',a.FROUTE)
+)c
+
+
+        ]]>
+    </select>
+
+
+    <select id="getListByRouteRule6" parameterType="java.lang.String"
+            resultMap="TransportRouteResultMap">
+        <![CDATA[
+select DISTINCT(fid),FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID FROM TSB_TRANSPORT_ROUTE where FRECEIPT_PLACE in (
+
+
+select fid FROM TBD_FREIGHT_ADDRESS where   enable='1'and FPARENT_ID  = (
+select FPARENT_ID FROM TBD_FREIGHT_ADDRESS
+where fid=#{deliveryPlace}
+ and enable='1'
+ )
+)
+and
+FROUTE NOT LIKE CONCAT('%',#{receiptPlace} , '%')
+  and FROUTE != CONCAT(FROUTE,',',#{route})
+
+
+        ]]>
+    </select>
+
+    <select id="getListByRouteRule7" parameterType="java.lang.String"
+            resultMap="TransportRouteResultMap">
+        <![CDATA[
+select DISTINCT(fid),FTRANSPORT_BILL_ID,FROUTE,FDELIVERY_PLACE,FRECEIPT_PLACE,FTRANSPORT_TYPE_ID,FSHIPMENT_TYPE_ID,FCREATE_TIME,FCREATOR_ID,FUPDATE_TIME,FORG_ID,FACC_ID  FROM TSB_TRANSPORT_ROUTE where FRECEIPT_PLACE in (
+
+select fid FROM TBD_FREIGHT_ADDRESS where   enable='1'and FPARENT_ID  = (
+select FPARENT_ID FROM TBD_FREIGHT_ADDRESS
+where fid=#{receiptPlace}
+ and enable='1'
+ )
+)
+and
+FROUTE NOT LIKE CONCAT('%',#{deliveryPlace} , '%')
+  and FROUTE != CONCAT(#{route},',',FROUTE)
+        ]]>
+    </select>
+
+    <select id="getByReceiptPlace" parameterType="java.lang.String"
+            resultMap="TransportRouteResultMap">
+        SELECT
+        *
+        FROM
+        TSB_TRANSPORT_ROUTE A
+        WHERE FRECEIPT_PLACE = #{receiptPlace}
+        ORDER BY FCREATE_TIME DESC
+    </select>
+
+    <!--<select id="getByReceiptPlaceGruop" parameterType="java.lang.String"-->
+    <!--resultMap="TransportRouteResultMap">-->
+    <!--SELECT-->
+    <!--*-->
+    <!--FROM-->
+    <!--TSB_TRANSPORT_ROUTE A-->
+    <!--WHERE FRECEIPT_PLACE = #{receiptPlace}-->
+    <!--ORDER BY FCREATE_TIME DESC-->
+    <!--</select>-->
+    <!---->
+    <select id="getByDeliveryPlace" parameterType="java.lang.String"
+            resultMap="TransportRouteResultMap">
+        SELECT
+        *
+        FROM
+        TSB_TRANSPORT_ROUTE A
+        WHERE FDELIVERY_PLACE = #{deliveryPlace}
+        ORDER BY FCREATE_TIME DESC
+    </select>
+    <select id="isExistRoute" resultType="int">
+    SELECT count(*) from  TSB_TRANSPORT_ROUTE a
+where a.FDELIVERY_PLACE=#{deliveryPlace}
+and a.FRECEIPT_PLACE=#{receiptPlace}
+and a.FROUTE=#{route}
+    </select>
+    <!--<select id="getByDeliveryPlaceGruop" parameterType="java.lang.String"-->
+    <!--resultMap="TransportRouteResultMap">-->
+    <!--SELECT-->
+    <!--*-->
+    <!--FROM-->
+    <!--TSB_TRANSPORT_ROUTE A-->
+    <!--WHERE FDELIVERY_PLACE = #{deliveryPlace}-->
+    <!--ORDER BY FCREATE_TIME DESC-->
+    <!--</select>-->
+</mapper>

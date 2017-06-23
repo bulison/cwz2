@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.eureka.rateService.dao.GoodsProfitDetailDao">
+
+    <resultMap id="GoodsProfitDetailResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.GoodsProfitDetailVo">
+        <result column="FILL_ID" property="billId"/>
+        <result column="FBILL_DATE" property="billDate"/>
+        <result column="FBILL_TYPE" property="billType"/>
+        <result column="FCODE" property="billCode"/>
+        <result column="FCUSTOMER_ID" property="customerID"/>
+        <result column="FCUSTOMER_NAME" property="customerName"/>
+        <result column="FACCOUNT_QUENTITY" property="accountQuentity"/>
+        <result column="FACCOUNT_AMOUNT" property="accountAmount"/>
+        <result column="FCOST_AMOUNT" property="costAmount"/>
+        <result column="FPROFIT" property="profit"/>
+        <result column="FPROFIT_RATE" property="profitRate"/>
+    </resultMap>
+
+    <select id="findProfitAnalysisDetail" resultMap="GoodsProfitDetailResultMap">
+        CALL goods_profit_analysis_detail(#{accId},#{startDate},#{endDate},#{goodsId},#{specId},#{page},#{rows});
+    </select>
+
+</mapper>

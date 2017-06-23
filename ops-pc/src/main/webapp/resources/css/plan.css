@@ -1,0 +1,36 @@
+@charset "utf-8";
+.new-plan-box{
+	font-size:14px;
+	position:relative;
+	padding:0px;
+	margin:0px;
+	width:88px;
+	list-style:none;
+}
+.new-plan-btn{	
+	background:url(../images/add_ico.png) #FFC76C no-repeat 6px 50%;
+	padding-left:24px;
+	padding-right:5px;
+}
+.new-plan-box ul{
+	margin:0px;
+	padding:0px;
+	position:absolute;	
+	top:37px;
+	display:none;
+}
+.new-plan-box ul li{	
+	margin-bottom:1px;	
+	padding:8px 15px;
+	background:#FFC76C;
+	border-radius:5px;	
+	-moz-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+.new-plan-box ul li a{
+	text-decoration:none;
+	color:#fff;
+}
+.new-plan-box ul li a:hover{
+	text-decoration:underline;
+}

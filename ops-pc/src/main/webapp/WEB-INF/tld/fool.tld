@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_1.dtd">
+<taglib>
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>fool</shortname>
+	<info>fool tag library</info>
+
+
+	<tag>
+		<name>tagOpt</name>
+		<tagclass>cn.fooltech.fool_ops.taglib.TagOpt</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<attribute>
+			<name>optCode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>reportTagOpt</name>
+		<tagclass>cn.fooltech.fool_ops.taglib.ReportTagOpt</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<attribute>
+			<name>optCode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>reportId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>flowTag</name>
+		<tagclass>cn.fooltech.fool_ops.taglib.FlowTag</tagclass>
+		<bodycontent>jsp</bodycontent>
+		<info>流程按钮标签，planId属性填计划FID,taskId填事件ID；type填plan或task</info>
+		<attribute>
+			<name>planId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>taskId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>type</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>planSecure</name>
+		<tagclass>cn.fooltech.fool_ops.taglib.PlanSecure</tagclass>
+		<bodycontent>jsp</bodycontent>
+		<attribute>
+			<name>planId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>secureCodes</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag> 
+</taglib>

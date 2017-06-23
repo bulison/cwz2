@@ -1,0 +1,31 @@
+delete from tbd_bank where FORG_ID=':FORG_ID';
+delete from tsb_goods_price where FORG_ID=':FORG_ID';
+delete from tbd_stock_period where FORG_ID=':FORG_ID';
+delete from tbd_unit where FORG_ID=':FORG_ID' and FPARENT_ID is not null;
+delete from tbd_good_spec where FORG_ID=':FORG_ID' and FPARENT_ID is not null;
+delete from tbd_goods where FORG_ID=':FORG_ID' and FPARENT_ID is not null;
+delete from tbd_supplier where FORG_ID=':FORG_ID';
+delete from tbd_customer where FORG_ID=':FORG_ID';
+delete from cfg_print_temp where FORG_ID=':FORG_ID';
+delete a from tbd_auxiliary_attr a,tbd_auxiliary_attr_type b where a.FCATEGORY_ID=b.fid and  a.FORG_ID=':FORG_ID' and  b.FCODE not in('010','011')
+update smg_tuser u set u.VALIDATION=0 where fid in(select m.FUSER_ID from tbd_member m where m.FORG_ID=':FORG_ID');
+delete from tbd_member where FORG_ID=':FORG_ID';
+
+delete from tbd_fiscal_balancesheet where FORG_ID=':FORG_ID';
+delete from tbd_fiscal_profit where FORG_ID=':FORG_ID';
+delete from tbd_fiscal_business where FORG_ID=':FORG_ID';
+delete from tsb_transport_loss where FORG_ID=':FORG_ID';
+delete from tbd_freight_address where FORG_ID=':FORG_ID';
+delete from tbd_vehicle_information where FORG_ID=':FORG_ID';
+delete from tsb_transport_template_detail2 where FORG_ID=':FORG_ID';
+delete from tsb_transport_template_detail1 where FORG_ID=':FORG_ID';
+delete from tsb_transport_template where FORG_ID=':FORG_ID';
+delete from tsb_ground_template_detail where FORG_ID=':FORG_ID';
+delete from tsb_ground_template where FORG_ID=':FORG_ID';
+delete from tbd_goods_transport where FORG_ID=':FORG_ID';
+delete from tsb_goods_barcode where FORG_ID=':FORG_ID';
+delete from TFLOW_SECURITY_LEVEL where FORG_ID=':FORG_ID';
+delete from TFLOW_TASK_LEVEL where FORG_ID=':FORG_ID';
+delete from tflow_msg_warn_setting where FORG_ID=':FORG_ID' and FIS_SYSTEM=0;
+delete from tflow_task_template where FORG_ID=':FORG_ID';
+delete from TFLOW_TASK_TYPE where FORG_ID=':FORG_ID';

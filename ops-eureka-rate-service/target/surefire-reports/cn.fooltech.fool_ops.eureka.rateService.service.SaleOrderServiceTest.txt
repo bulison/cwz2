@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cn.fooltech.fool_ops.eureka.rateService.service.SaleOrderServiceTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 33.914 sec - in cn.fooltech.fool_ops.eureka.rateService.service.SaleOrderServiceTest

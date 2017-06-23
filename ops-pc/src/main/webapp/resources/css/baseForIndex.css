@@ -1,0 +1,111 @@
+@charset "utf-8";
+/* CSS Document */
+*{
+	margin:0px;
+	padding:0px;
+}
+body{
+	background:#F0F0F0;
+	margin:0px;
+	padding:0px;
+}
+ul{
+	list-style:none;
+}
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+/** 导航栏 **/
+.nav-box{
+	background:url(${ctx}/resources/themes/local/images/tital.png) #FFFFFF no-repeat 15px 8px;
+	width:1160px;
+	height:33px;
+	padding-top:15px;
+	margin-left:15px;
+	font-size:16px;
+	
+}
+.nav-box ul{
+	list-style:none;
+	margin:0px;
+	padding:0px;
+	margin-left:4px;
+}
+.nav-box ul li{
+	float:left;
+	background:url(${ctx}/resources/themes/local/images/right1.png) no-repeat 0 2px;
+	margin-left:10px;
+	padding-left:20px;
+}
+.nav-box ul li.index{
+	background:none;
+}
+.nav-box ul li a{
+	text-decoration:none;
+	color:#838383;
+}
+.nav-box ul li a.curr{
+	font-weight:bold;
+}
+/** 导航栏 end **/
+/** tool-box **/
+.tool-box{
+	width:100%;
+	height:40px;
+	margin-top:18px;
+	/*background:#F7F7F7;
+	border:1px solid #DDDDDD;*/
+}
+.tool-box-pane{
+	display:inline-block;
+	margin-right:10px;
+	height:36px;
+	float:left;
+}
+.tool-box-where{
+	background:#F7F7F7;	
+	border:1px solid #DDDDDD;
+	display:block;
+	float:none;
+	margin-right:0px;
+}
+.tool-box-where div{
+	display:inline-block;
+	padding:7px 0 5px 10px;
+	height:25px;
+}
+.tool-box-where div a{
+	text-decoration:none;
+	color:#656565;
+	font-size:12px;
+	margin-right:15px;	
+	padding:6px 15px;
+}
+.tool-box-where div a.curr{
+	background:#666666;
+	color:#ffffff;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+}
+.tool-box-where .tool-box-link{
+	text-align:right;
+	float:right;
+}
+.tool-box-where .tool-box-link a{
+	padding:6px 0 6px 6px;
+}
+.tool-box-where .tool-box-link a.curr,.tool-box-where .tool-box-link a:hover{
+	color:#1AB8F9;
+	background:none;
+}
+.split-right{
+	border-right:1px solid #DDDDDD;
+}
+.split-left{
+	border-left:1px solid #DDDDDD;
+}
+/** tool-box end */

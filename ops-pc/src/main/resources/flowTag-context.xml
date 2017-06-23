@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<description>流程按钮配置</description>
+	 
+	<bean id="ops.FlowOperationService" class="cn.fooltech.fool_ops.domain.flow.service.FlowOperationService">
+		<property name="operationMap">
+			<map>
+				<!-- 计划草稿状态 100：编辑editPlan、删除deletePlan、提交handUpPlan；  -->
+				<entry key="Plan#100">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR"></property>
+							<property name="id" value="editPlan"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="编辑"></property>
+						</bean>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR"></property>
+							<property name="id" value="deletePlan"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="删除"></property>
+						</bean>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR"></property>
+							<property name="id" value="handUpPlan"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="提交"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 已提交待审核 101：审核auditPlan；-->
+				<entry key="Plan#101">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="SHR"></property>
+							<property name="id" value="auditPlan"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="审核"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 已审核办理中  103：终止stopPlan-->
+				<entry key="Plan#102,103#any">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="SHR,ZRR"></property>
+							<property name="id" value="stopPlan"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="终止"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 已审核办理中，若事件全完成  102：终止stopPlan、完成completePlan（若事件全完成）-->
+				<entry key="Plan#102,103#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="SHR,ZRR"></property>
+							<property name="id" value="stopPlan"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="终止"></property>
+						</bean>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR,ZRR"></property>
+							<property name="id" value="completePlan"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="完成"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 延迟状态 103：完成completePlan（若事件全完成）-->
+				<entry key="Plan#103#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR,ZRR"></property>
+							<property name="id" value="completePlan"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="完成"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 已完成 105：评分rankPlan -->
+				<entry key="Plan#104,105#any#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,SHR,ZRR,TZR"></property>
+							<property name="id" value="rankPlan"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="评分"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 事件草稿状态 1、计划状态100； -->
+				<entry key="Task#100">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR"></property>
+							<property name="id" value="editTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="编辑"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 事件草稿状态 1、计划状态100，一级事件； -->
+				<entry key="Task#100#0#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="plan-FQR"></property>
+							<property name="id" value="editTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="编辑"></property>
+						</bean>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="plan-FQR"></property>
+							<property name="id" value="deleteTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="删除"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 2、计划状态102或103，事件状态0或4，且不为一级事件且父事件未分派完成； -->
+				<entry key="Task#102,103#0,4#false#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR"></property>
+							<property name="id" value="editTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="编辑"></property>
+						</bean>
+					</list>
+				</entry>
+				
+				<!-- 1、计划状态100且无子事件； -->
+				<entry key="Task#100#any#any#any#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="TZR,FQR"></property>
+							<property name="id" value="deleteTask"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="删除"></property>
+						</bean>
+					</list>
+				</entry>
+				<!--  2、计划状态102或103，事件状态0或4，且不为一级事件且父事件未分派完成且无子事件； -->
+				<entry key="Task#102,103#0,4#false#false#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="TZR,FQR"></property>
+							<property name="id" value="deleteTask"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="删除"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- rankTask评分按钮：事件状态3 -->
+				<entry key="Task#any#3,6#any#any#any#any#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="TZR,FQR,CBR,ZRR"></property>
+							<property name="id" value="rankTask"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="评分"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- auditExecuteTask审核办理按钮：计划状态102或103，事件状态2； -->
+				<entry key="Task#102,103#2">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="ZRR,parent-CBR"></property>
+							<property name="id" value="auditExecuteTask"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="审核办理"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- auditDelayTask审核延迟按钮：计划状态102或103，事件状态1或5且有delayEndTime； -->
+				<entry key="Task#102,103#1,5#any#any#any#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="ZRR,parent-CBR"></property>
+							<property name="id" value="auditDelayTask"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="审核延迟"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- delayTask延迟申请按钮：计划状态102或103，事件状态1或5且无delayEndTime； -->
+				<entry key="Task#102,103#1,5#any#any#any#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="CBR"></property>
+							<property name="id" value="delayTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="延迟申请"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- stopTask终止按钮：计划状态102或103，事件状态1或2或4或5；不是一级事件 -->
+				<entry key="Task#102,103#1,2,4,5#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="ZRR,parent-CBR"></property>
+							<property name="id" value="stopTask"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="终止"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- stopTask终止按钮：计划状态102或103，事件状态1或2或4或5；一级事件 -->
+				<entry key="Task#102,103#1,2,4,5#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="ZRR,plan-FQR"></property>
+							<property name="id" value="stopTask"></property>
+							<property name="clazz" value="btn-green4 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="终止"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- relateTask关联按钮：计划状态102或103，事件状态0或4； -->
+				<entry key="Task#102,103#0,4">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,ZRR,TZR,CBR"></property>
+							<property name="id" value="relateTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="关联"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- executeBeginTask开始办理按钮：计划状态102或103，事件状态0或4，且无子事件且父事件已分派完成； -->
+				<entry key="Task#102,103#0,4#any#true#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="CBR"></property>
+							<property name="id" value="executeBeginTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="开始办理"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- executeDoneTask结束办理按钮：计划状态102或103，事件状态1或5，且无子事件； -->
+				<entry key="Task#102,103#1,5#any#any#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="CBR"></property>
+							<property name="id" value="executeDoneTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="结束办理"></property>
+						</bean>
+					</list>
+				</entry>
+
+				<!-- executeDoneTask结束办理按钮：计划状态102或103，事件状态1或5，且无子事件； -->
+				<entry key="Task#102,103#1,5#any#any#false">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="CBR"></property>
+							<property name="id" value="executeDoneTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="结束办理"></property>
+						</bean>
+					</list>
+				</entry>
+
+				<!-- assignTask确认分派按钮：计划状态102或103，事件状态0或1或4或5，且未分派完成且有子事件且父事件已分派完成； -->
+				<entry key="Task#102,103#0,1,4,5#any#true#true#any#any#false#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="CBR,ZRR"></property>
+							<property name="id" value="assignTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="确认分派"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- changeTask变更按钮：1、事件状态0或4，且不为一级事件且父事件已分派完成； -->
+				<entry key="Task#102,103#0,4#false#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR,ZRR"></property>
+							<property name="id" value="changeTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="变更"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- changeTask变更按钮：2、事件状态0或4，且为一级事件； -->
+				<entry key="Task#102,103#0,4#true">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR,ZRR"></property>
+							<property name="id" value="changeTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="变更"></property>
+						</bean>
+					</list>
+				</entry>
+				<!-- changeTask变更按钮：3、事件状态1或5； -->
+				<entry key="Task#102,103#1,5">
+					<list>
+						<bean class="cn.fooltech.fool_ops.domain.flow.vo.FlowOperation">
+							<property name="auth" value="FQR,TZR,ZRR"></property>
+							<property name="id" value="changeTask"></property>
+							<property name="clazz" value="btn-orange3 btn-xs"></property>
+							<property name="type" value="button"></property>
+							<property name="name" value="变更"></property>
+						</bean>
+					</list>
+				</entry>
+			</map>
+		</property>
+	</bean>
+</beans>

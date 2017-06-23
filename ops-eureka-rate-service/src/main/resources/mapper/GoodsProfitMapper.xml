@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.eureka.rateService.dao.GoodsProfitDao">
+
+    <!--<resultMap id="GoodsProfitResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.GoodsProfit">
+        <result column="FGOODS_ID" property="goodsId"/>
+        <result column="FGOODS_SPEC_ID" property="SpecId"/>
+        <result column="FGOODS_CODE" property="goodsCode"/>
+        <result column="FGOODS_NAME" property="goodsName"/>
+        <result column="FGOODS_SPEC_NAME" property="SpecName"/>
+        <result column="FACCOUNT_UINT_ID" property="accountUnitId"/>
+        <result column="FACCOUNT_UINT_NAME" property="accountUnitName"/>
+        <result column="FACCOUNT_QUENTITY" property="accountQuentity"/>
+        <result column="FACCOUNT_AMOUNT" property="accountAmount"/>
+        <result column="FCOST_AMOUNT" property="costAmount"/>
+        <result column="FPROFIT" property="profit"/>
+        <result column="FPROFIT_RATE" property="profitRate"/>
+        <collection property="details" ofType="cn.fooltech.fool_ops.eureka.rateService.vo.GoodsProfitDetail">
+            <result column="DILL_ID" property="billId"/>
+            &lt;!&ndash;<result column="DGOODS_ID" property="goodsId"/>
+            <result column="DGOODS_SPEC_ID" property="SpecId"/>
+            <result column="DGOODS_CODE" property="goodsCode"/>
+            <result column="DGOODS_NAME" property="goodsName"/>
+            <result column="DGOODS_SPEC_NAME" property="SpecName"/>
+            <result column="DACCOUNT_UINT_ID" property="accountUnitId"/>
+            <result column="DACCOUNT_UINT_NAME" property="accountUnitName"/>&ndash;&gt;
+            <result column="DBILL_DATE" property="billDate"/>
+            <result column="DBILL_TYPE" property="billType"/>
+            <result column="DCODE" property="billCode"/>
+            <result column="DCUSTOMER_ID" property="customerID"/>
+            <result column="DCUSTOMER_NAME" property="customerName"/>
+            <result column="DACCOUNT_QUENTITY" property="accountQuentity"/>
+            <result column="DACCOUNT_AMOUNT" property="accountAmount"/>
+            <result column="DCOST_AMOUNT" property="costAmount"/>
+            <result column="DPROFIT" property="profit"/>
+            <result column="DPROFIT_RATE" property="profitRate"/>
+        </collection>
+    </resultMap>-->
+
+    <resultMap id="GoodsProfitResultMap" type="cn.fooltech.fool_ops.eureka.rateService.vo.GoodsProfitVo">
+        <result column="FGOODS_ID" property="goodsId"/>
+        <result column="FGOODS_SPEC_ID" property="SpecId"/>
+        <result column="FGOODS_CODE" property="goodsCode"/>
+        <result column="FGOODS_NAME" property="goodsName"/>
+        <result column="FGOODS_SPEC_NAME" property="SpecName"/>
+        <result column="FACCOUNT_UINT_ID" property="accountUnitId"/>
+        <result column="FACCOUNT_UINT_NAME" property="accountUnitName"/>
+        <result column="FACCOUNT_QUENTITY" property="accountQuentity"/>
+        <result column="FACCOUNT_AMOUNT" property="accountAmount"/>
+        <result column="FCOST_AMOUNT" property="costAmount"/>
+        <result column="FPROFIT" property="profit"/>
+        <result column="FPROFIT_RATE" property="profitRate"/>
+    </resultMap>
+
+    <select id="findProfitAnalysis" resultMap="GoodsProfitResultMap">
+        CALL goods_profit_analysis(#{accId},#{startDate},#{endDate},#{goodsId},#{specId},#{page},#{rows});
+    </select>
+
+    <!--<select id="findAll" resultMap="GoodsProfitResultMap">-->
+        <!--CALL goods_profit_test();-->
+    <!--</select>-->
+
+</mapper>

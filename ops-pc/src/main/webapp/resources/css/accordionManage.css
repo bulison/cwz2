@@ -1,0 +1,251 @@
+@charset "utf-8";
+body{
+      background: #EAEDF2
+}
+.titleBar{
+	  position:fixed;
+	  top:0px;
+	  /* background:#F0F0F0; */
+	  width:100%; /*写给不兼容的浏览器*/
+	  width:calc(100% - 40px);
+	  width:-moz-calc(100% - 40px);
+	  width:-webkit-calc(100% - 40px);
+	  padding:0 20px;
+	  z-index:10000;
+}
+.titleBar #titleContainer{
+      margin:10px 0 0 0;
+      padding:11px 0; 
+}
+.titleBar #square{
+      background:#50b3e7;
+	  width:30px;
+	  height:40px;
+	  position:absolute;
+	  margin-top:-11px;
+}
+#square #triangle{
+      width: 0;
+	  height: 0;
+	  border-top: 5px solid transparent;
+	  border-left: 10px solid #50b3e7;
+	  border-bottom: 5px solid transparent;
+	  margin-left:30px;
+	  margin-top:15px;
+}
+.titleBar h1{
+	  font:800 16px 宋体  !important;
+	  color:#50b3e7;
+	  margin-left:60px;
+	  height:18px;
+}
+.shadow{
+	  background:#fff;
+	  padding:5px 0;
+	  margin:0px 20px 10px 20px;
+	  -moz-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	  -o-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	  -ms-box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+	  box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+}
+.toolBar{
+      margin:65px 20px 10px 20px
+}
+.data-list{
+      margin:5px 20px 10px 20px
+}
+.btn-ora-add{
+      border: none;
+      height:auto;
+      width:auto;
+      padding:5px 10px;
+      font-size: 18px;
+      font-weight: bolder;
+      vertical-align: middle;
+}
+.btn-s{
+      width:50px;
+      height:40px;
+      vertical-align: middle;
+      margin-left: 15px
+}
+    
+/* 修改easyui */
+.panel {
+      border-bottom: 1px #DCDCDC solid;
+}
+.panel-header {
+      padding: 0px
+}
+.panel-title {
+      text-align: left;
+      position: relative;
+      top:15%;
+      left:35px;
+}
+.accordion .panel-title {
+      margin: 0px 0px;
+      font-size: 16px;
+      font-weight: bold;
+}
+.accordion .accordion-header {
+      background:none;
+      background-color: #F2F2F2;
+      border-radius:0px;
+	  -moz-border-radius:0px;
+	  -webkit-border-radius:0px;
+}
+.accordion .accordion-header .editType{ 
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin: 0 10px 0 0;
+      vertical-align: top;
+      background:url("../images/editType.png") no-repeat;
+} 
+.accordion .accordion-body {
+      padding: 0 0;
+      color: #8A8A8A;
+      position: relative;
+      overflow: hidden;
+}
+.accordion {
+      border: 1px solid #DCDCDC;
+}
+.panel-tool {
+      left: 5px;
+      right:auto;
+}
+.panel-edit{
+      position: absolute;
+      top: 45%;
+      margin-top: -8px;
+      height: 20px;
+      overflow: hidden;
+      left: auto;
+      right:5px;
+}
+.accordion .accordion-body a{
+      background-color:#FFFFC4;
+      border: 1px #FFC76C solid;
+      padding:2px;
+      display: inline-block;
+      margin: 10px 10px;
+      color: black;
+      text-decoration: none;
+}
+.accordion .accordion-body a:HOVER{
+      color: #1BB9FA;
+}
+.accordion .accordion-body a.enable0,.accordion .accordion-body a.enableSNU{
+      color: gray;
+}
+.accordion .accordion-body a.addItems{
+      background: url("../images/add_1.png") no-repeat;
+      width:15px;
+      height: 20px;
+      margin: 7px 10px 7px 10px;
+      vertical-align: middle;
+      border: 1px;
+}
+.accordion .accordion-body div.listBox{
+      padding:0;
+      background:#FFFFFF;
+      margin: 10px 30px;
+}
+.accordion .accordion-body div.array{
+      position: relative;
+      top:0px;
+      left:0px;
+      background:url("../images/array.png") no-repeat;
+      width:20px;
+      height:19px;
+      display: none;
+      z-index: 99
+}
+/* .accordion .accordion-body  */div.editBox{
+      width:100%;
+      position: relative;
+      top:0;
+      left:0;
+      border:#B6C5D8 1px solid;
+      border-left: none;
+      border-right: none;
+      display: none;
+      background: #F1F4F9
+}
+.toolBar .editBox{
+      margin-top: 10px
+}
+/* .accordion .accordion-body  */div.editBox div.close-btn{
+      float:right;
+      margin:5px 20px 0 0;
+      width:14px;
+      height:16px;
+      background:url("../images/close-btn.png") no-repeat;
+}
+/* .accordion .accordion-body  */div.editBox p{
+      display: inline-block;
+      margin:10px 30px 0px 30px
+}
+/* .accordion .accordion-body  */div.editBox p font{
+      font-size: 15px;
+      color: black;
+      min-width: 52.5px;
+      display: inline-block;
+      text-align: right
+}
+/* .accordion .accordion-body  */div.editBox p font em{
+      color: red;
+}
+/* .accordion .accordion-body  */div.editBox p span{
+      font-size: 15px;
+      color: black;
+      margin-top: 2px;
+      display: inline-block;
+}
+/* .accordion .accordion-body  */div.editBox p input.easyui-validatebox{
+      width:180px;
+      height:30px;
+      border:#D2D9E9 1px solid;
+}
+/* .accordion .accordion-body  */div.editBox p input[type=radio]{
+      width:20px;
+      height:20px;
+      margin: 0 10px 0 10px;
+      vertical-align: top;
+}
+/* .accordion .accordion-body  */div.editBox p input.describe{
+      width:474px;
+}
+.toolBar .editBox p input.describe{
+      width:364px;
+}
+/* .accordion .accordion-body  */div.editBox p input.save-btn{
+      background-color:#51B2E7;
+      color:#FFFFFF;
+      width:110px;
+      height:40px;
+      border: 1px solid #DCDCDC;
+      margin-right: 30px;
+      margin-bottom:10px;
+      border-radius:10px;
+      font-size: 15px;
+      font-weight: bolder; 
+}
+/* .accordion .accordion-body  */div.editBox p input.delete-btn{
+      background-color:#EDEDED;
+      color:#7C7C7C;
+      width:110px;
+      height:40px;
+      border: 1px solid #DCDCDC;
+      border-radius:10px;
+      font-size: 15px;
+      font-weight: bolder;
+}
+.accordion-collapse {
+      background: url("../images/collapse.png") no-repeat;
+}
+.accordion-expand {
+      background: url('../images/expand.png') no-repeat;
+}

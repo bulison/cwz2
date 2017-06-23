@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fooltech.fool_ops.domain.basedata.dao.PeerQuoteReportDao">
+
+    <resultMap id="PeerQuoteReportResultMap" type="cn.fooltech.fool_ops.domain.basedata.vo.PeerQuoteVo">
+        <id column="FID" property="id"/>
+        <result column="FCODE" property="code"/>
+        <result column="FBILL_DATE" property="billDate"/>
+        <result column="FSUPPLIER" property="supplier"/>
+        <result column="FCUSTOMER_ID" property="customerId"/>
+        <result column="customerName" property="customerName"/>
+        <result column="FGOODS_ID" property="goodsId"/>
+        <result column="goodsName" property="goodsName"/>
+        <result column="goodsCode" property="goodsCode"/>
+        <result column="FGOOD_SPEC_ID" property="goodSpecId"/>
+        <result column="specName" property="specName"/>
+        <result column="FUNIT_ID" property="unitId"/>
+        <result column="unitName" property="unitName"/>
+        <result column="FDELIVERY_PRICE" property="deliveryPrice"/>
+        <result column="FRECEIPT_PLACE" property="receiptPlace"/>
+        <result column="receiptPlaceName" property="receiptPlaceName"/>
+        <result column="creatorName" property="creatorName"/>
+    </resultMap>
+
+
+    <select id="queryByReceiptPlaceCount" resultMap="PeerQuoteReportResultMap">
+        SELECT * FROM tsb_peer_quote p
+            <include refid="queryByReceiptPlaceCountWhere"/>
+    </select>
+
+    <sql id="queryByReceiptPlaceCountWhere">
+        <where>
+            1=1
+            <if test="receiptPlace !=null and receiptPlace !=''">
+                and p.FRECEIPT_PLACE = #{receiptPlace}
+            </if>
+            and p.FACC_ID=#{accId}
+        </where>
+    </sql>
+    <select id="queryReport" resultMap="PeerQuoteReportResultMap">
+        SELECT p.*,c.FNAME as customerName,g.FNAME as goodsName,g.FCODE as goodsCode,
+        u.FNAME as unitName,f.FNAME as receiptPlaceName,a.USER_NAME as creatorName,
+        s.FNAME as specName
+        FROM tsb_peer_quote p
+            LEFT JOIN tbd_customer c on p.FCUSTOMER_ID=c.fid
+            LEFT JOIN tbd_goods g on p.FGOODS_ID=g.fid
+            LEFT JOIN tbd_good_spec s on p.FGOOD_SPEC_ID=s.fid
+            LEFT JOIN tbd_unit u on p.FUNIT_ID=u.fid
+            LEFT JOIN tbd_freight_address f on p.FRECEIPT_PLACE=f.fid
+            LEFT JOIN smg_tuser a on p.FCREATOR_ID=a.fid
+
+            <include refid="queryReportWhere"/>
+    </select>
+
+    <sql id="queryReportWhere">
+
+        <where>
+            1=1
+            <if test="startDay != null">
+                and FBILL_DATE >= #{startDay}
+            </if>
+            <if test="endDay != null">
+                <![CDATA[ and FBILL_DATE <= #{endDay} ]]>
+            </if>
+            <if test="supplier !=null and supplier!=''">
+                and FSUPPLIER like CONCAT('%',#{supplier},'%')
+            </if>
+            <if test="customerId !=null and customerId!=''">
+                and FCUSTOMER_ID = #{customerId}
+            </if>
+            <if test="customerName !=null and customerName!=''">
+                and c.FNAME like CONCAT('%',#{customerName},'%')
+            </if>
+            <if test="goodsName !=null and goodsName!=''">
+                and g.FNAME like CONCAT('%',#{goodsName},'%')
+            </if>
+            <if test="goodsId !=null and goodsId!=''">
+                and FGOODS_ID = #{goodsId}
+            </if>
+            <if test="goodsCode !=null and goodsCode!=''">
+                and g.FCODE like CONCAT('%',#{goodsCode},'%')
+            </if>
+            and p.FACC_ID=#{accId}
+            order by FBILL_DATE desc,p.FCODE desc
+        </where>
+    </sql>
+
+    <resultMap id="PriceTrendResultMap" type="cn.fooltech.fool_ops.domain.basedata.vo.SimplePeerQuoteVo">
+        <result column="FBILL_DATE" property="billDate"/>
+        <result column="FSUPPLIER" property="supplier"/>
+        <result column="unitScale" property="unitScale"/>
+        <result column="FDELIVERY_PRICE" property="deliveryPrice"/>
+    </resultMap>
+
+    <select id="queryPriceTrend" resultMap="PriceTrendResultMap">
+        select p.FBILL_DATE as FBILL_DATE,p.FSUPPLIER as FSUPPLIER,
+        p.FDELIVERY_PRICE as FDELIVERY_PRICE,
+        u.FSCALE as unitScale
+        from tsb_peer_quote p
+        LEFT JOIN tbd_unit u on p.FUNIT_ID=u.fid
+
+        <where>
+            1=1
+            <if test="startDay != null">
+                and FBILL_DATE >= #{startDay}
+            </if>
+            <if test="endDay != null">
+                <![CDATA[ and FBILL_DATE <= #{endDay} ]]>
+            </if>
+            <if test="goodsId !=null and goodsId!=''">
+                and FGOODS_ID = #{goodsId}
+            </if>
+            <if test="goodSpecId !=null and goodSpecId!=''">
+                and FGOOD_SPEC_ID = #{goodSpecId}
+            </if>
+            <if test="goodSpecId ==null or goodSpecId==''">
+                and FGOOD_SPEC_ID is null
+            </if>
+            <if test="receiptPlace !=null and receiptPlace!=''">
+                and FRECEIPT_PLACE = #{receiptPlace}
+            </if>
+            and p.FACC_ID=#{accId}
+        </where>
+
+        order by FBILL_DATE asc
+    </select>
+
+    <select id="queryCostPriceTrend" resultMap="PriceTrendResultMap">
+        select p.FBILL_DATE as FBILL_DATE,'成本' as FSUPPLIER,
+        min(p.FTOTAL_PRICE) as FDELIVERY_PRICE,
+        u.FSCALE as unitScale
+
+        from tsb_cost_analysis_bill p
+        LEFT JOIN tbd_unit u on p.FGOODS_UINT_ID=u.fid
+        LEFT JOIN tbd_supplier s on p.FSUPPLIER_ID=s.fid
+
+        <where>
+            1=1
+            <if test="startDay != null">
+                and FBILL_DATE >= #{startDay}
+            </if>
+            <if test="endDay != null">
+                <![CDATA[ and FBILL_DATE <= #{endDay} ]]>
+            </if>
+            <if test="goodsId !=null and goodsId!=''">
+                and FGOODS_ID = #{goodsId}
+            </if>
+            <if test="goodSpecId !=null and goodSpecId!=''">
+                and FGOODS_SPEC_ID = #{goodSpecId}
+            </if>
+            <if test="goodSpecId ==null or goodSpecId==''">
+                and FGOODS_SPEC_ID is null
+            </if>
+            <if test="receiptPlace !=null and receiptPlace!=''">
+                and FRECEIPT_PLACE = #{receiptPlace}
+            </if>
+            and p.FACC_ID=#{accId}
+        </where>
+        group by p.FBILL_DATE
+        order by FBILL_DATE asc
+
+    </select>
+
+
+</mapper>

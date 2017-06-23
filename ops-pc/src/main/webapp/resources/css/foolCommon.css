@@ -1,0 +1,46 @@
+.foolTdTitle{
+	text-align:right;
+	font-size:12px;	
+	color:#000000;
+}
+.foolTdEdit{
+	width:238px;
+}
+.remark_r{color:#F00}
+.foolText{
+	width:100%;
+	height:25px;
+	font-size:12px;
+	color:#717171;
+	border:solid 1px;
+}
+
+.foolSelect{
+	width:50%;
+	height:25px;
+	font-size:12px;
+	color:#717171;
+	border:solid 1px;
+}
+
+.foolTextArea{
+	height:72px;
+	width:100%; 
+	vertical-align:text-top;
+	resize:none;
+	font-size:12px;
+	color:#717171;
+}
+.foolCommit{
+	width:86px; 
+	height:25px;
+	background-color:rgb(27,185,250);
+	border:1px solid #999; 
+	border-radius:5px; 
+	color:#FFF; 	
+}
+.foolInputText{
+	width:162px;
+	height:27px;
+	border:solid 1px #CCCCCC;
+}
